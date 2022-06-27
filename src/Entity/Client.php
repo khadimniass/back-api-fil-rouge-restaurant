@@ -7,6 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 use App\Repository\ClientRepository;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: ClientRepository::class)]
 #[ApiResource(
@@ -14,22 +15,17 @@ use Symfony\Component\HttpFoundation\Response;
     "get" =>[
         'method' => 'get',
         'status' => Response::HTTP_OK,
-        'normalization_context' =>['groups' => ['user:read:simple']],
+        'normalization_context' =>['groups' => ['user:read:simple']]
     ],
 
-    "post"],
-
+    "post"
+    ],
     itemOperations:["put","get"]
 )]
 class Client extends User
 {
     #[ORM\Column(type: 'string', length: 100)]
     private $adresse;
-
-// public function __construct(){
-//     $this->roles=["ROLES_CLENTS"];
-// }
-
     public function getAdresse(): ?string
     {
         return $this->adresse;

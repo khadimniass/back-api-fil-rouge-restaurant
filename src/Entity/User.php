@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Controller\MailController;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\Collection;
@@ -12,6 +13,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation\SerializedName;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\InheritanceType("JOINED")]
@@ -30,9 +32,17 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
             'path'=>'register/',
             'denormalization_context' => ['groups' => ['user:write']],
             'normalization_context' => ['groups' => ['user:read:simple']]
-        ],
-    ]
-)]
+        ]
+    ],
+    itemOperations:[
+        "patch"=>[
+            "method"=>"patch",
+            "deserialize"=>true,
+            "path"=>"/users/validate/{token}",
+            "controller"=>MailController::class
+        ]
+    ])]
+
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[Groups(['user:read:simple'])]
@@ -43,6 +53,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[Groups(['user:read:simple'])]
     #[ORM\Column(type: 'string', length: 100)]
+    #[Assert\NotBlank(message: "le nom doit pas etre null")]
     protected $nom;
 
     #[Groups(['user:read:simple'])]
@@ -62,7 +73,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'string')]
     protected $password;
 
-    #[ORM\Column(type: 'smallint', options:["default"=>1])]
+    #[ORM\Column(type: 'smallint', options:["default"=>0])]
     protected $etat;
 
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Produit::class)]
@@ -84,6 +95,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function __construct()
     {
         $this->produits = new ArrayCollection();
+        $this->expireAt= new \DateTime('+1 day');
     }
 
     public function getId(): ?int
@@ -280,6 +292,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
+    public function tokenGenerator(){
+        $this->token=str_replace(['+','/','='],['-','_',''],base64_encode(random_bytes(128)));
+    }
+    public function arrayRoles(){
+        $table=get_called_class();
+        $table=explode('\\',$table);
+        $table=strtoupper($table[2]);
+        $this->roles[]='ROLE_'.$table;
+        $this->etat = 0;
+    }
 }
-
-

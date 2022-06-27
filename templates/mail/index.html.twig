@@ -1,0 +1,5 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+<h1>Bonjour {{ user.prenom }}  {{ user.nom }}</h1>
+<p>cliquez <a href="{{ url('api_users_patch_item',{"token":user.token}) }}">ICI</a> pour activer votre compte</p>
+{% endblock %}
