@@ -2,13 +2,15 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use App\Repository\ProduitRepository;
+use App\Repository\MenuBurgerRepository;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Serializer\Annotation\Groups;
 
-#[ORM\Entity(repositoryClass: ProduitRepository::class)]
+#[ORM\Entity(repositoryClass: MenuBurgerRepository::class)]
 #[ORM\InheritanceType("JOINED")]
 #[ORM\DiscriminatorColumn(name:"type",type: "string")]
 #[ORM\DiscriminatorMap(["burger" => "Burger","complement" => "Complement","menu"=>"Menu"])]
@@ -24,7 +26,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
         "post"],
     itemOperations:["put","get"]
 )]
-class Produit
+class MenuBurger   //Burger
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -43,11 +45,16 @@ class Produit
     #[ORM\Column(type: 'smallint',options:["default"=>1])]
     protected $etat;
 
-    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'produits')]
-    private $user;
-
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $description;
+
+    #[ORM\ManyToMany(targetEntity: Commande::class, inversedBy: 'menuBurgers')]
+    private $commandes;
+
+    public function __construct()
+    {
+        $this->commandes = new ArrayCollection();
+    }
 
 
     public function getId(): ?int
@@ -91,18 +98,6 @@ class Produit
         return $this;
     }
 
-    public function getUser(): ?User
-    {
-        return $this->user;
-    }
-
-    public function setUser(?User $user): self
-    {
-        $this->user = $user;
-
-        return $this;
-    }
-
     public function getDescription(): ?string
     {
         return $this->description;
@@ -111,6 +106,30 @@ class Produit
     public function setDescription(?string $description): self
     {
         $this->description = $description;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Commande>
+     */
+    public function getCommandes(): Collection
+    {
+        return $this->commandes;
+    }
+
+    public function addCommande(Commande $commande): self
+    {
+        if (!$this->commandes->contains($commande)) {
+            $this->commandes[] = $commande;
+        }
+
+        return $this;
+    }
+
+    public function removeCommande(Commande $commande): self
+    {
+        $this->commandes->removeElement($commande);
 
         return $this;
     }

@@ -14,6 +14,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation\SerializedName;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\InheritanceType("JOINED")]
@@ -68,6 +69,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     protected $roles = [];
 
     #[ORM\Column(type: 'string', length: 180, unique: true)]
+  //  #[Assert\Unique(message: 'ce champ doit etre unique')]
     protected $login;
 
     #[ORM\Column(type: 'string')]
@@ -75,9 +77,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(type: 'smallint', options:["default"=>0])]
     protected $etat;
-
-    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Produit::class)]
-    protected $produits;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     protected $token;
@@ -94,7 +93,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function __construct()
     {
-        $this->produits = new ArrayCollection();
         $this->expireAt= new \DateTime('+1 day');
     }
 
@@ -216,34 +214,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * @return Collection<int, Produit>
+     * @return Collection<int, MenuBurger>
      */
-    public function getProduits(): Collection
-    {
-        return $this->produits;
-    }
 
-    public function addProduit(Produit $produit): self
-    {
-        if (!$this->produits->contains($produit)) {
-            $this->produits[] = $produit;
-            $produit->setUser($this);
-        }
 
-        return $this;
-    }
 
-    public function removeProduit(Produit $produit): self
-    {
-        if ($this->produits->removeElement($produit)) {
-            // set the owning side to null (unless already changed)
-            if ($produit->getUser() === $this) {
-                $produit->setUser(null);
-            }
-        }
 
-        return $this;
-    }
+
 
     public function getToken(): ?string
     {

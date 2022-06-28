@@ -52,6 +52,7 @@ class DataPersister implements ContextAwareDataPersisterInterface
             $data->tokenGenerator();
             $data->arrayRoles();
         }
+        //dd($data);
         $this->_entityManager->persist($data);
         $this->_serviceMailer->sendEmail($data);
         $this->_entityManager->flush();
