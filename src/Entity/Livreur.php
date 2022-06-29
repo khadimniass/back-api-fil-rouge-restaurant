@@ -10,7 +10,6 @@ use App\Repository\LivreurRepository;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Serializer\Annotation\Groups;
-
 #[ORM\Entity(repositoryClass: LivreurRepository::class)]
 #[ApiResource(
     collectionOperations:[
@@ -19,9 +18,10 @@ use Symfony\Component\Serializer\Annotation\Groups;
         'status' => Response::HTTP_OK,
         'normalization_context' =>['groups' => ['user:read:simple']],
     ],
-
-    "post"],
-
+    "post"=>[
+        "security"=>"is_granted('ROLE_GESTIONNAIRE')"
+    ]
+    ],
     itemOperations:["put","get"]
 )]
 class Livreur extends User
@@ -62,7 +62,6 @@ class Livreur extends User
     public function setGestionnaire(?Gestionnaire $gestionnaire): self
     {
         $this->gestionnaire = $gestionnaire;
-
         return $this;
     }
 

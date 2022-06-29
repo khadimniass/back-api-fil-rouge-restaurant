@@ -2,7 +2,7 @@
 
 namespace App\DataPersister;
 
-use     App\Entity\User;
+use App\Entity\User;
 use App\service\ServiceMailer;
 use Doctrine\ORM\EntityManagerInterface;
 use ApiPlatform\Core\DataPersister\ContextAwareDataPersisterInterface;
@@ -54,7 +54,7 @@ class DataPersister implements ContextAwareDataPersisterInterface
         }
         //dd($data);
         $this->_entityManager->persist($data);
-        $this->_serviceMailer->sendEmail($data);
+       // $this->_serviceMailer->sendEmail($data);
         $this->_entityManager->flush();
 
     }

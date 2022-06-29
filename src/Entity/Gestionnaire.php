@@ -29,21 +29,14 @@ class Gestionnaire extends User
     #[ORM\OneToMany(mappedBy: 'gestionnaire', targetEntity: Livreur::class)]
     private $livreurs;
 
+    #[ORM\OneToMany(mappedBy: 'gestionnaire', targetEntity: Produit::class)]
+    private $produits;
+
     public function __construct()
     {
         parent::__construct();
-        $this->livreurs = new ArrayCollection();
+        $this->produits = new ArrayCollection();
     }
-
-    // #[ORM\Id]
-    // #[ORM\GeneratedValue]
-    // #[ORM\Column(type: 'integer')]
-    // private $id;
-
-    // public function getId(): ?int
-    // {
-    //     return $this->id;
-    // }
 
     /**
      * @return Collection<int, Livreur>
@@ -69,6 +62,36 @@ class Gestionnaire extends User
             // set the owning side to null (unless already changed)
             if ($livreur->getGestionnaire() === $this) {
                 $livreur->setGestionnaire(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Produit>
+     */
+    public function getProduits(): Collection
+    {
+        return $this->produits;
+    }
+
+    public function addProduit(Produit $produit): self
+    {
+        if (!$this->produits->contains($produit)) {
+            $this->produits[] = $produit;
+            $produit->setGestionnaire($this);
+        }
+
+        return $this;
+    }
+
+    public function removeProduit(Produit $produit): self
+    {
+        if ($this->produits->removeElement($produit)) {
+            // set the owning side to null (unless already changed)
+            if ($produit->getGestionnaire() === $this) {
+                $produit->setGestionnaire(null);
             }
         }
 

@@ -22,27 +22,21 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 #[ORM\DiscriminatorMap(["client" => "Client","gestionnaire" => "Gestionnaire","livreur"=>"Livreur"])]
 #[ApiResource(
     collectionOperations:[
-        "get" =>[
-            'method' => 'get',
-            'status' => Response::HTTP_OK,
-            'normalization_context' =>['groups' => ['user:read:simple']],
-        ],
-        "post_register" => [
-            "method"=>"post",
-            'status' => Response::HTTP_CREATED,
-            'path'=>'register/',
-            'denormalization_context' => ['groups' => ['user:write']],
-            'normalization_context' => ['groups' => ['user:read:simple']]
+        "get",
+        "post",
+        "VALIDATION" => [
+            "method"=>"PATCH",
+            'deserialize' => false,
+            'path'=>'users/validate/{token}',
+            'controller' => MailController::class
         ]
+
     ],
     itemOperations:[
-        "patch"=>[
-            "method"=>"patch",
-            "deserialize"=>true,
-            "path"=>"/users/validate/{token}",
-            "controller"=>MailController::class
-        ]
-    ])]
+        "get",
+        "put"
+    ]
+)]
 
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
@@ -214,13 +208,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * @return Collection<int, MenuBurger>
+     * @return Collection<int, Catologue>
      */
-
-
-
-
-
 
     public function getToken(): ?string
     {
@@ -270,7 +259,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
     public function tokenGenerator(){
-        $this->token=str_replace(['+','/','='],['-','_',''],base64_encode(random_bytes(128)));
+        $this->token=str_replace(['+','/','='],['-','_',''],base64_encode(random_bytes(16)));
     }
     public function arrayRoles(){
         $table=get_called_class();
