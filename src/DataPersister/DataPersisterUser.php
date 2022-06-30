@@ -2,16 +2,17 @@
 
 namespace App\DataPersister;
 
-use App\Entity\User;
+use App\Entity\{User, Livreur, Client};
 use App\service\ServiceMailer;
 use Doctrine\ORM\EntityManagerInterface;
 use ApiPlatform\Core\DataPersister\ContextAwareDataPersisterInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
  *
  */
-class DataPersister implements ContextAwareDataPersisterInterface
+class DataPersisterUser implements ContextAwareDataPersisterInterface
 {
     private $_entityManager;
     private $_passwordEncoder;
@@ -20,12 +21,13 @@ class DataPersister implements ContextAwareDataPersisterInterface
     public function __construct(
         EntityManagerInterface $entityManager,
         UserPasswordHasherInterface $passwordEncoder,
-        ServiceMailer $serviceMailer
-
+        ServiceMailer $serviceMailer,
+        TokenStorageInterface $token
     ) {
         $this->_entityManager = $entityManager;
         $this->_passwordEncoder = $passwordEncoder;
         $this->_serviceMailer=$serviceMailer;
+        $this->token = $token->getToken();
     }
 
     /**
@@ -52,7 +54,8 @@ class DataPersister implements ContextAwareDataPersisterInterface
             $data->tokenGenerator();
             $data->arrayRoles();
         }
-        //dd($data);
+        if ($data instanceof Livreur)
+            $data->setGestionnaire($this->token->getUser());
         $this->_entityManager->persist($data);
        // $this->_serviceMailer->sendEmail($data);
         $this->_entityManager->flush();

@@ -29,20 +29,19 @@ security:
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
-        # - { path: ^/admin, roles: ROLE_ADMIN }
-        # - { path: ^/profile, roles: ROLE_USER }
         - { path: ^/api/docs, roles: IS_AUTHENTICATED_FULLY }
         - { path: ^/api/login, roles: PUBLIC_ACCESS }
         - { path: ^/api/register, roles: PUBLIC_ACCESS }
         - { path: ^/api/clients$, roles: PUBLIC_ACCESS, methods: POST }
         - { path: ^/api/gestionnaires$, roles: PUBLIC_ACCESS, methods: POST }
         - { path: ^/api/burgers$, roles: PUBLIC_ACCESS, methods: GET }
+        - { path: ^/api/menus$, roles: PUBLIC_ACCESS, methods: GET }
+        - { path: ^/api/catalogues$, roles: PUBLIC_ACCESS, methods: GET }
         - { path: ^/api/burgers$, roles: ROLE_GESTIONNAIRE, methods: POST }
-        - { path: ^/api/livreurs, roles: ROLE_GESTIONNAIRE, methods: POST }
+        - { path: ^/api/livreurs, roles: ROLE_GESTIONNAIRE}
         - { path: ^/api/users/validate, roles: PUBLIC_ACCESS, methods: PATCH }
         - { path: ^/api$, roles: PUBLIC_ACCESS }
         - { path: ^/api, roles: IS_AUTHENTICATED_FULLY}
-
 when@test:
     security:
         password_hashers:

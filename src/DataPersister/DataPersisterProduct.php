@@ -2,15 +2,14 @@
 
 namespace App\DataPersister;
 
+use App\Entity\{Produit};
 use ApiPlatform\Core\DataPersister\ContextAwareDataPersisterInterface;
-use App\Entity\Livreur;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
-class LivreurDataPersister implements ContextAwareDataPersisterInterface
+class DataPersisterProduct implements ContextAwareDataPersisterInterface
 {
-
     private $entityManager;
     private ?TokenInterface $token;
 
@@ -22,12 +21,8 @@ class LivreurDataPersister implements ContextAwareDataPersisterInterface
 
     public function supports($data, array $context = []): bool
     {
-        return $data instanceof Livreur;
+        return $data instanceof Produit;
     }
-
-    /**
-     * @return Livreur $data
-     */
 
     public function persist($data, array $context = [])
     {

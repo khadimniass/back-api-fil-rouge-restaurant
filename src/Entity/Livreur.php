@@ -19,7 +19,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
         'normalization_context' =>['groups' => ['user:read:simple']],
     ],
     "post"=>[
-        "security"=>"is_granted('ROLE_GESTIONNAIRE')"
+        "security"=>"is_granted('ROLE_GESTIONNAIRE')",
+        "security_message"=>"acction non autorisée"
     ]
     ],
     itemOperations:["put","get"]
@@ -39,6 +40,7 @@ class Livreur extends User
 
     public function __construct()
     {
+        parent::__construct();
         $this->matriculeMoto="MOTO".date("YmdHis");
         $this->livraisons = new ArrayCollection();
     }
