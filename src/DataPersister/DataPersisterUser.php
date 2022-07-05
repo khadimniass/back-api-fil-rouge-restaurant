@@ -2,6 +2,7 @@
 
 namespace App\DataPersister;
 
+use App\service\Archiver;
 use App\Entity\{User, Livreur, Client};
 use App\service\ServiceMailer;
 use Doctrine\ORM\EntityManagerInterface;
@@ -56,17 +57,20 @@ class DataPersisterUser implements ContextAwareDataPersisterInterface
         }
         if ($data instanceof Livreur)
             $data->setGestionnaire($this->token->getUser());
+//        $this->_serviceMailer->sendEmail($data);
         $this->_entityManager->persist($data);
-       // $this->_serviceMailer->sendEmail($data);
         $this->_entityManager->flush();
-
     }
     /**
      * {@inheritdoc}
      */
+    /**
+     * @param User $data
+     */
     public function remove($data, array $context = [])
     {
-        $this->_entityManager->remove($data);
+        Archiver::archiver($data);
+        $this->_entityManager->persist($data);
         $this->_entityManager->flush();
     }
 }

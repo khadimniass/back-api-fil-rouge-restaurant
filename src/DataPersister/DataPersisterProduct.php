@@ -2,7 +2,9 @@
 
 namespace App\DataPersister;
 
-use App\Entity\{Produit};
+use App\service\Archiver;
+use App\service\CalculPrixMenu;
+use App\Entity\{Menu, Produit};
 use ApiPlatform\Core\DataPersister\ContextAwareDataPersisterInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -23,19 +25,34 @@ class DataPersisterProduct implements ContextAwareDataPersisterInterface
     {
         return $data instanceof Produit;
     }
+    /**
+     * @param Produit $data
+     */
 
     public function persist($data, array $context = [])
     {
+        if ($data->getImageBinary()){
+            $data->setImage(file_get_contents($data->getImageBinary()));
+          //  dd($data->getImage());
+        }
+        if ($data instanceof Menu){
+            $data->setPrix(CalculPrixMenu::prixMenu());
+        }
         $data->setGestionnaire($this->token->getUser());
+        //dd($data);
         $this->entityManager->persist($data);
         $this->entityManager->flush();
     }
     /**
      * {@inheritdoc}
      **/
+    /**
+     * @param Produit $data
+     */
     public function remove($data, array $context = [])
     {
-        $this->entityManager->remove($data);
+        Archiver::archiver($data);
+        $this->entityManager->persist($data);
         $this->entityManager->flush();
     }
 }

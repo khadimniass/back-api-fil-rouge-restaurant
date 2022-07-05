@@ -22,7 +22,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
     "post"
     ],
-    itemOperations:["put","get"]
+    itemOperations:["put","get","delete"]
 )]
 class Client extends User
 {

@@ -17,15 +17,14 @@ class CatalogueProvider implements ContextAwareCollectionDataProviderInterface, 
     }
     public function getCollection(string $resourceClass, string $operationName = null, array $context = [])
     {
-        $catalogue=[
+      //  dd("Catalogue en construction...");
+        return [
             'menu'=>$this->menuRepository->findAll(),
             'burger'=>$this->burgerRepository->findAll()
         ];
-        return $catalogue;
     }
     public function supports(string $resourceClass, string $operationName = null, array $context = []): bool
     {
         return $resourceClass === Catalogue::class;
     }
-
 }

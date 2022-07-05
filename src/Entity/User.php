@@ -30,7 +30,6 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
             'path'=>'users/validate/{token}',
             'controller' => MailController::class
         ]
-
     ],
     itemOperations:[
         "get",
@@ -69,26 +68,25 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'string')]
     protected $password;
 
-    #[ORM\Column(type: 'smallint', options:["default"=>0])]
+    #[ORM\Column(type: 'smallint', options:["default"=>1])]
     protected $etat;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     protected $token;
 
-    #[ORM\Column(type: 'boolean', nullable: true)]
+    #[ORM\Column(type: 'boolean', nullable: true,options: ["default"=>false])]
     protected $isEnable;
 
     #[ORM\Column(type: 'datetime', nullable: true)]
     protected $expireAt;
 
-    // #[ORM\Column(type: 'string', length: 100, nullable: true)]
     #[SerializedName("password")]
     protected $plainPassword;
 
     public function __construct()
     {
         $this->expireAt= new \DateTime('+1 day');
-
+        $this->isEnable=false;
     }
 
     public function getId(): ?int
@@ -260,13 +258,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
     public function tokenGenerator(){
-        $this->token=str_replace(['+','/','='],['-','_',''],base64_encode(random_bytes(16)));
+        $this->token=str_replace(['+','/','='],['-','_',''],base64_encode(random_bytes(32)));
     }
     public function arrayRoles(){
         $table=get_called_class();
         $table=explode('\\',$table);
         $table=strtoupper($table[2]);
         $this->roles[]='ROLE_'.$table;
-        $this->etat = 0;
+        $this->etat = 1;
     }
 }

@@ -24,7 +24,6 @@ security:
             pattern: ^/api
             stateless: true
             jwt: ~
-            
        
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
@@ -34,9 +33,12 @@ security:
         - { path: ^/api/register, roles: PUBLIC_ACCESS }
         - { path: ^/api/clients$, roles: PUBLIC_ACCESS, methods: POST }
         - { path: ^/api/gestionnaires$, roles: PUBLIC_ACCESS, methods: POST }
-        - { path: ^/api/burgers$, roles: PUBLIC_ACCESS, methods: GET }
-        - { path: ^/api/menus$, roles: PUBLIC_ACCESS, methods: GET }
+        - { path: ^/api/burgers, roles: PUBLIC_ACCESS, methods: GET }
+        - { path: ^/api/boissons, roles: PUBLIC_ACCESS, methods: GET }
+        - { path: ^/api/frites, roles: PUBLIC_ACCESS, methods: GET }
+        - { path: ^/api/menus, roles: PUBLIC_ACCESS, methods: GET }
         - { path: ^/api/catalogues$, roles: PUBLIC_ACCESS, methods: GET }
+        - { path: ^/api/complements$, roles: PUBLIC_ACCESS, methods: GET }
         - { path: ^/api/burgers$, roles: ROLE_GESTIONNAIRE, methods: POST }
         - { path: ^/api/livreurs, roles: ROLE_GESTIONNAIRE}
         - { path: ^/api/users/validate, roles: PUBLIC_ACCESS, methods: PATCH }
