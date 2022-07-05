@@ -3,10 +3,11 @@
 namespace App\DataPersister;
 
 use App\service\Archiver;
-use App\service\CalculPrixMenu;
 use App\Entity\{Menu, Produit};
-use ApiPlatform\Core\DataPersister\ContextAwareDataPersisterInterface;
+use App\service\CalculPrixMenu;
+use App\Repository\ProduitRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use ApiPlatform\Core\DataPersister\ContextAwareDataPersisterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
@@ -14,11 +15,13 @@ class DataPersisterProduct implements ContextAwareDataPersisterInterface
 {
     private $entityManager;
     private ?TokenInterface $token;
+    private $produitRepository;
 
-    public function __construct(EntityManagerInterface $entityManager, TokenStorageInterface $token)
+    public function __construct(EntityManagerInterface $entityManager, TokenStorageInterface $token, ProduitRepository $produitRepository)
     {
         $this->entityManager = $entityManager;
         $this->token = $token->getToken();
+        $this->produitRepository = $produitRepository;
     }
 
     public function supports($data, array $context = []): bool
@@ -38,8 +41,9 @@ class DataPersisterProduct implements ContextAwareDataPersisterInterface
         if ($data instanceof Menu){
             $data->setPrix(CalculPrixMenu::prixMenu());
         }
-        $data->setGestionnaire($this->token->getUser());
         //dd($data);
+        $data->setGestionnaire($this->token->getUser());
+        $data->setQuantity($this->produitRepository->findBy() +1);
         $this->entityManager->persist($data);
         $this->entityManager->flush();
     }

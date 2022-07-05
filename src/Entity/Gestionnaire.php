@@ -49,7 +49,7 @@ class Gestionnaire extends User
     /**
      * @return Collection<int, Livreur>
      */
-    public function getLivreurs(): Collection
+    public function getLivreurs() : Collection
     {
         return $this->livreurs;
     }
@@ -165,4 +165,5 @@ class Gestionnaire extends User
 
         return $this;
     }
+
 }

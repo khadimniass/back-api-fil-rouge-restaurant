@@ -13,14 +13,14 @@ class ServiceMailer {
         $this->twig=$twig;
     }
 
-    public function sendEmail($data,$subject="creation de compte")
+    public function sendEmail($user,$subject="creation de compte")
     {
             $email = (new Email())
             ->from('niasskhadim@outlook.com')
-            ->to($data->getLogin())
+            ->to($user->getLogin())
             ->subject($subject)
             ->html($this->twig->render("mail/index.html.twig",[
-            'user'=>$data
+            'user'=>$user
             ]));
             $this->mailer->send($email);
     }
