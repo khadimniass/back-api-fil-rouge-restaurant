@@ -22,16 +22,16 @@ class CommandePersister implements ContextAwareDataPersisterInterface
 
     public function supports($data, array $context = []): bool
     {
-        return $data instanceof Commande;
+        return $data instanceof Commande || $data instanceof Client;
     }
 
     public function persist($data, array $context = [])
     {
        // dd($data->getGestionnaire());
        // dd(($this->token->getUser()));
-        if ($data instanceof Client)
-            $this->setClient($this->token->getUser());
-        dd('error intercepted');
+            $data->setClient($this->token->getUser());
+        // dd('error intercepted');
+        //  dd($data);
         $this->_entityManager->persist($data);
         $this->_entityManager->flush();
     }
