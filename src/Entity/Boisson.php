@@ -13,32 +13,21 @@ use Doctrine\ORM\Mapping as ORM;
 class Boisson extends Produit
 {
 
-    #[ORM\ManyToOne(targetEntity: Menu::class, inversedBy: 'boissons')]
-    private $menu;
-
     #[ORM\ManyToMany(targetEntity: Taille::class, inversedBy: 'boissons')]
     private $tailles;
 
     #[ORM\ManyToMany(targetEntity: Burger::class, inversedBy: 'boissons')]
     private $burgers;
 
+    #[ORM\OneToMany(mappedBy: 'boisson', targetEntity: MenuBoisson::class)]
+    private $menuBoissons;
+
     public function __construct()
     {
         parent::__construct();
         $this->tailles = new ArrayCollection();
         $this->burgers = new ArrayCollection();
-    }
-
-    public function getMenu(): ?Menu
-    {
-        return $this->menu;
-    }
-
-    public function setMenu(?Menu $menu): self
-    {
-        $this->menu = $menu;
-
-        return $this;
+        $this->menuBoissons = new ArrayCollection();
     }
 
     /**
@@ -85,6 +74,36 @@ class Boisson extends Produit
     public function removeBurger(Burger $burger): self
     {
         $this->burgers->removeElement($burger);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, MenuBoisson>
+     */
+    public function getMenuBoissons(): Collection
+    {
+        return $this->menuBoissons;
+    }
+
+    public function addMenuBoisson(MenuBoisson $menuBoisson): self
+    {
+        if (!$this->menuBoissons->contains($menuBoisson)) {
+            $this->menuBoissons[] = $menuBoisson;
+            $menuBoisson->setBoisson($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMenuBoisson(MenuBoisson $menuBoisson): self
+    {
+        if ($this->menuBoissons->removeElement($menuBoisson)) {
+            // set the owning side to null (unless already changed)
+            if ($menuBoisson->getBoisson() === $this) {
+                $menuBoisson->setBoisson(null);
+            }
+        }
 
         return $this;
     }

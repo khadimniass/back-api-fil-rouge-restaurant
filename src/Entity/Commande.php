@@ -47,7 +47,7 @@ class Commande
     #[ORM\JoinColumn(nullable: true)]
     private $promo;
 
-    #[ORM\OneToMany(mappedBy: 'commande', targetEntity: LigneCommande::class,cascade:['persist'])]
+    #[ORM\OneToMany(mappedBy: 'commande', targetEntity: LigneCommande::class,cascade:['persist'] )]
     #[SerializedName('Produits')]
     #[Groups(['view:commandes'])]
     private $ligneCommandes;

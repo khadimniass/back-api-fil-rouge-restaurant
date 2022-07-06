@@ -11,7 +11,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: LigneCommandeRepository::class)]
 #[ApiResource(
-    collectionOperations:["get", "update", "delete"],
+    collectionOperations:["get"],
     itemOperations:["put","get", "delete"]
 )]
 class LigneCommande
@@ -31,6 +31,9 @@ class LigneCommande
     #[Groups(['view:commandes'])]
     #[ORM\ManyToOne(targetEntity: Produit::class, inversedBy: 'ligneCommandes')]
     private $produit;
+
+    #[ORM\Column(type: 'float', nullable: true)]
+    private $prix;
 
     public function getId(): ?int
     {
@@ -69,6 +72,18 @@ class LigneCommande
     public function setProduit(?Produit $produit): self
     {
         $this->produit = $produit;
+        return $this;
+    }
+
+    public function getPrix(): ?float
+    {
+        return $this->prix;
+    }
+
+    public function setPrix(?float $prix): self
+    {
+        $this->prix = $prix;
+
         return $this;
     }
 }

@@ -32,7 +32,7 @@ class Produit
     protected $id;
 
     #[ORM\Column(type: 'string', length: 100)]
-    #[Groups(['view:menu','post:view:burger','get:view:burger'])]
+    #[Groups(['post:view:burger','get:view:burger'])]
     protected $nom;
 
     /**
@@ -55,10 +55,11 @@ class Produit
     protected $etat;
 
     #[ORM\Column(type: 'text')]
-    #[Groups(['view:menu','post:view:burger','get:view:burger','get:manu_read'])]
+    #[Groups(['post:view:burger','get:view:burger','get:manu_read'])]
     protected $description;
 
     #[ORM\Column(type: 'blob', nullable: true)] //voir plain password et plainPassword
+    #[Groups(['get:view:burger'])]
     protected $image;
 
     #[SerializedName("image")]
@@ -68,13 +69,13 @@ class Produit
     #[ORM\ManyToOne(targetEntity: Gestionnaire::class, inversedBy: 'produits')]
     private $gestionnaire;
 
-    #[Groups(['view:menu','post:view:burger','get:view:burger','get:manu_read'])]
+    #[Groups(['post:view:burger','get:view:burger','get:manu_read'])]
     #[ORM\Column(type: 'float', nullable: true)]
     private $prix;
 
     #[ORM\Column(type: 'integer')]
-    #[SerializedName('quantity a stocker')]
-#    #[Groups(['get:view:burger'])]
+//    #[SerializedName('quantity a stocker')]
+    #[Groups(['get:view:burger'])]
     private $quantity;
 
     #[ORM\OneToMany(mappedBy: 'produit', targetEntity: LigneCommande::class, cascade: ["persist"])]

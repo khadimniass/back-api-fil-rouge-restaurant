@@ -36,15 +36,12 @@ class DataPersisterProduct implements ContextAwareDataPersisterInterface
     {
         if ($data->getImageBinary()){
             $data->setImage(file_get_contents($data->getImageBinary()));
-          //  dd($data->getImage());
         }
         if ($data instanceof Menu){
-            $data->setPrix(CalculPrixMenu::prixMenu());
+            $data->setPrix(CalculPrixMenu::prixMenu($data,0.5));
         }
-        //dd($data);
         $data->setGestionnaire($this->token->getUser());
         $data->setQuantity(1);
-       // dd($data);
         $this->entityManager->persist($data);
         $this->entityManager->flush();
     }

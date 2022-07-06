@@ -12,28 +12,18 @@ use Doctrine\ORM\Mapping as ORM;
 #[ApiResource]
 class Frite extends Produit
 {
-    #[ORM\ManyToOne(targetEntity: Menu::class, inversedBy: 'frites')]
-    private $menu;
 
     #[ORM\ManyToMany(targetEntity: Burger::class, inversedBy: 'frites')]
     private $burgers;
+
+    #[ORM\OneToMany(mappedBy: 'frite', targetEntity: MenuFrite::class)]
+    private $menuFrites;
 
     public function __construct()
     {
         parent::__construct();
         $this->burgers = new ArrayCollection();
-    }
-
-    public function getMenu(): ?Menu
-    {
-        return $this->menu;
-    }
-
-    public function setMenu(?Menu $menu): self
-    {
-        $this->menu = $menu;
-
-        return $this;
+        $this->menuFrites = new ArrayCollection();
     }
 
     /**
@@ -56,6 +46,36 @@ class Frite extends Produit
     public function removeBurger(Burger $burger): self
     {
         $this->burgers->removeElement($burger);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, MenuFrite>
+     */
+    public function getMenuFrites(): Collection
+    {
+        return $this->menuFrites;
+    }
+
+    public function addMenuFrite(MenuFrite $menuFrite): self
+    {
+        if (!$this->menuFrites->contains($menuFrite)) {
+            $this->menuFrites[] = $menuFrite;
+            $menuFrite->setFrite($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMenuFrite(MenuFrite $menuFrite): self
+    {
+        if ($this->menuFrites->removeElement($menuFrite)) {
+            // set the owning side to null (unless already changed)
+            if ($menuFrite->getFrite() === $this) {
+                $menuFrite->setFrite(null);
+            }
+        }
 
         return $this;
     }

@@ -1,4 +1,6 @@
 api_platform:
+    'title': 'KHADIM NIASS'
+    'description': 'PROJET FIL ROUGE BRAZIL BURGER'
     mapping:
         paths: ['%kernel.project_dir%/src/Entity']
     patch_formats:
