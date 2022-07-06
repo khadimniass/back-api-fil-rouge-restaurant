@@ -14,7 +14,7 @@ use Doctrine\Common\Collections\ArrayCollection;
     collectionOperations:[
         "get"=>[
             'status' => Response::HTTP_OK,
-            "normalization_context"=>['groups' => ['get:view:burger']]
+       //     "normalization_context"=>['groups' => ['get:view:burger']]
         ],
         "post"=>[
             "denormalization_context"=>['groups'=>['post:view:burger']]

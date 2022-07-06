@@ -20,13 +20,12 @@ class ProductProvider implements ContextAwareCollectionDataProviderInterface, Re
         $produits = $this->repository->findAll();
         foreach ($produits as $prod){
             if ($prod->getImage()) {
-                //dd($prod);
-                // base64_encode(stream_get_contents($prod->getImage()))
+             //   base64_encode(stream_get_contents($prod->getImage()));
               //  $image=stream_get_contents(fopen($prod->getImage(), 'r'));
                // $prod->setImage($image);
             }
         }
-        dd($produits);
+       // dd($produits[5]->getImage());
         return $produits;
     }
 

@@ -130,7 +130,7 @@ class Produit
 
     public function getImage()
     {
-        return $this->image;
+        return (utf8_encode(base64_encode(stream_get_contents(($this->image)))));
     }
 
     public function setImage($image): self

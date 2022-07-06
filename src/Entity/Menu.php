@@ -16,13 +16,16 @@ use Symfony\Component\Serializer\Annotation\SerializedName;
 #[ORM\Entity(repositoryClass: MenuRepository::class)]
 #[ApiResource(
     collectionOperations: [
-        //"post-menu" => [
-        //    "method" => "POST",
-         //   "controller" => MenuController::class
-        //],
-        "POST" => [
-            "denormalization_context" => ['groups' => ['view:menu']],
-       ],
+        "post-menu" => [
+           "method" => "POST",
+           "path" => "menu2",
+           "deserialize"=>false,
+           "controller" => MenuController::class
+        ],
+
+     //   "POST" => [
+     //     "denormalization_context" => ['groups' => ['view:menu']],
+     // ],
         "GET" => [
             'status' => Response::HTTP_OK,
             'normalization_context' => ['groups' => ['get:manu_read']]
