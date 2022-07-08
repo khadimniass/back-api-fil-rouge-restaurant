@@ -26,7 +26,7 @@ final class Version20220705181232 extends AbstractMigration
         $this->addSql('ALTER TABLE burger DROP FOREIGN KEY FK_EFE35A0DCCD7E912');
         $this->addSql('DROP INDEX IDX_EFE35A0DCCD7E912 ON burger');
         $this->addSql('ALTER TABLE burger DROP menu_id');
-        $this->addSql('ALTER TABLE ligne_commande ADD prix DOUBLE PRECISION DEFAULT NULL');
+        $this->addSql('ALTER TABLE ligne_commande ADD prixLivraison DOUBLE PRECISION DEFAULT NULL');
     }
 
     public function down(Schema $schema): void
@@ -36,6 +36,6 @@ final class Version20220705181232 extends AbstractMigration
         $this->addSql('ALTER TABLE burger ADD menu_id INT DEFAULT NULL');
         $this->addSql('ALTER TABLE burger ADD CONSTRAINT FK_EFE35A0DCCD7E912 FOREIGN KEY (menu_id) REFERENCES menu (id) ON UPDATE NO ACTION ON DELETE NO ACTION');
         $this->addSql('CREATE INDEX IDX_EFE35A0DCCD7E912 ON burger (menu_id)');
-        $this->addSql('ALTER TABLE ligne_commande DROP prix');
+        $this->addSql('ALTER TABLE ligne_commande DROP prixLivraison');
     }
 }

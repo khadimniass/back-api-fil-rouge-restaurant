@@ -23,9 +23,9 @@ use Symfony\Component\Serializer\Annotation\SerializedName;
            "controller" => MenuController::class
         ],
 
-     //   "POST" => [
+        "POST" => [
      //     "denormalization_context" => ['groups' => ['view:menu']],
-     // ],
+      ],
         "GET" => [
             'status' => Response::HTTP_OK,
             'normalization_context' => ['groups' => ['get:manu_read']]
@@ -124,10 +124,8 @@ class Menu extends Produit
                 $menuBoisson->setMenu(null);
             }
         }
-
         return $this;
     }
-
     /**
      * @return Collection<int, MenuBurger>
      */
@@ -135,17 +133,14 @@ class Menu extends Produit
     {
         return $this->menuBurgers;
     }
-
     public function addMenuBurger(MenuBurger $menuBurger): self
     {
         if (!$this->menuBurgers->contains($menuBurger)) {
             $this->menuBurgers[] = $menuBurger;
             $menuBurger->setMenu($this);
         }
-
         return $this;
     }
-
     public function removeMenuBurger(MenuBurger $menuBurger): self
     {
         if ($this->menuBurgers->removeElement($menuBurger)) {

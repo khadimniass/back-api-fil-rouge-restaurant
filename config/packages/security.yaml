@@ -41,6 +41,7 @@ security:
         - { path: ^/api/catalogues$, roles: PUBLIC_ACCESS, methods: GET }
         - { path: ^/api/complements$, roles: PUBLIC_ACCESS, methods: GET }
         - { path: ^/api/livreurs, roles: ROLE_GESTIONNAIRE}
+        - { path: ^/api/livraisons, roles: ROLE_GESTIONNAIRE}
         - { path: ^/api/users/validate, roles: PUBLIC_ACCESS, methods: PATCH }
         - { path: ^/api$, roles: PUBLIC_ACCESS }
         - { path: ^/api, roles: IS_AUTHENTICATED_FULLY}

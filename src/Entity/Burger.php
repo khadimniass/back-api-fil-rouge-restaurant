@@ -14,7 +14,7 @@ use Doctrine\Common\Collections\ArrayCollection;
     collectionOperations:[
         "get"=>[
             'status' => Response::HTTP_OK,
-       //     "normalization_context"=>['groups' => ['get:view:burger']]
+            "normalization_context"=>['groups' => ['get:view:burger']]
         ],
         "post"=>[
             "denormalization_context"=>['groups'=>['post:view:burger']]
@@ -116,11 +116,10 @@ class Burger extends Produit
     {
         if ($this->menuBurgers->removeElement($menuBurger)) {
             // set the owning side to null (unless already changed)
-            if ($menuBurger->getBurger() === $this) {
+            if ($menuBurger->getBurgers() === $this) {
                 $menuBurger->setBurger(null);
             }
         }
-
         return $this;
     }
 }

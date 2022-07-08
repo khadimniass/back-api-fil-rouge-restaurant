@@ -17,7 +17,7 @@ use Symfony\Component\Serializer\Annotation\SerializedName;
     ],
     collectionOperations:[
         "post"=>[
-            "denormalization_context"=>['groups'=>['view:commandes']],
+            "denormalization_context"=>['groups'=>['view:commandes']]
         ],
         "get"
     ]
@@ -51,6 +51,10 @@ class Commande
     #[SerializedName('Produits')]
     #[Groups(['view:commandes'])]
     private $ligneCommandes;
+
+    #[ORM\ManyToOne(targetEntity: Zone::class, inversedBy: 'commandes')]
+    #[Groups(['view:commandes'])]
+    private $zone;
 
     public function __construct()
     {
@@ -150,6 +154,18 @@ class Commande
                 $ligneCommande->setCommande(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getZone(): ?Zone
+    {
+        return $this->zone;
+    }
+
+    public function setZone(?Zone $zone): self
+    {
+        $this->zone = $zone;
 
         return $this;
     }

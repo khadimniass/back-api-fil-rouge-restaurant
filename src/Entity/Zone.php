@@ -12,6 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
 #[ApiResource]
 class Zone
 {
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
@@ -19,9 +20,6 @@ class Zone
 
     #[ORM\Column(type: 'string', length: 150)]
     private $nom;
-
-    #[ORM\OneToMany(mappedBy: 'zone', targetEntity: Livraison::class)]
-    private $livraisons;
 
     #[ORM\OneToMany(mappedBy: 'zone', targetEntity: Quartier::class)]
     private $quartiers;
@@ -33,10 +31,17 @@ class Zone
     #[ORM\JoinColumn(nullable: false)]
     private $gestionnaire;
 
+    #[ORM\Column(type: 'integer',nullable:true)]
+    private $prixLivraison;
+
+    #[ORM\OneToMany(mappedBy: 'zone', targetEntity: Commande::class)]
+    private $commandes;
+
     public function __construct()
     {
-        $this->livraisons = new ArrayCollection();
         $this->quartiers = new ArrayCollection();
+        $this->etat=1;
+        $this->commandes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -52,36 +57,6 @@ class Zone
     public function setNom(string $nom): self
     {
         $this->nom = $nom;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Livraison>
-     */
-    public function getLivraisons(): Collection
-    {
-        return $this->livraisons;
-    }
-
-    public function addLivraison(Livraison $livraison): self
-    {
-        if (!$this->livraisons->contains($livraison)) {
-            $this->livraisons[] = $livraison;
-            $livraison->setZone($this);
-        }
-
-        return $this;
-    }
-
-    public function removeLivraison(Livraison $livraison): self
-    {
-        if ($this->livraisons->removeElement($livraison)) {
-            // set the owning side to null (unless already changed)
-            if ($livraison->getZone() === $this) {
-                $livraison->setZone(null);
-            }
-        }
 
         return $this;
     }
@@ -136,6 +111,48 @@ class Zone
     public function setGestionnaire(?Gestionnaire $gestionnaire): self
     {
         $this->gestionnaire = $gestionnaire;
+
+        return $this;
+    }
+
+    public function getPrixLivraison(): ?int
+    {
+        return $this->prixLivraison;
+    }
+
+    public function setPrixLivraison(int $prixLivraison): self
+    {
+        $this->prixLivraison = $prixLivraison;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Commande>
+     */
+    public function getCommandes(): Collection
+    {
+        return $this->commandes;
+    }
+
+    public function addCommande(Commande $commande): self
+    {
+        if (!$this->commandes->contains($commande)) {
+            $this->commandes[] = $commande;
+            $commande->setZone($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCommande(Commande $commande): self
+    {
+        if ($this->commandes->removeElement($commande)) {
+            // set the owning side to null (unless already changed)
+            if ($commande->getZone() === $this) {
+                $commande->setZone(null);
+            }
+        }
 
         return $this;
     }

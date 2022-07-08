@@ -58,12 +58,12 @@ class Produit
     #[Groups(['post:view:burger','get:view:burger','get:manu_read'])]
     protected $description;
 
-    #[ORM\Column(type: 'blob', nullable: true)] //voir plain password et plainPassword
+    #[ORM\Column(type: 'blob', nullable: true)]
     #[Groups(['get:view:burger'])]
     protected $image;
 
     #[SerializedName("image")]
-    #[Groups(['post:view:burger','get:view:burger','get:manu_read'])]
+    #[Groups(['post:view:burger'])]
     protected $imageBinary;
 
     #[ORM\ManyToOne(targetEntity: Gestionnaire::class, inversedBy: 'produits')]
@@ -130,7 +130,7 @@ class Produit
 
     public function getImage()
     {
-        return (utf8_encode(base64_encode(stream_get_contents(($this->image)))));
+        return (is_resource($this->image)) ? utf8_encode(base64_encode(stream_get_contents( ($this->image) ) ) ) : $this->image;
     }
 
     public function setImage($image): self

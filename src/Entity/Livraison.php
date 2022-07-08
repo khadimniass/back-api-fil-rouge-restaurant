@@ -7,9 +7,23 @@ use App\Repository\LivraisonRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: LivraisonRepository::class)]
-#[ApiResource]
+#[ApiResource(
+    collectionOperations: [
+        "GET",
+        "POST"=>[
+            "security"=>"is_granted('ROLE_GESTIONNAIRE')",
+    //        "security_message"=>"vous etes pas autorisée a effectuer cette action"
+            "denormalization_context"=>['groups'=>['post:livraison:view']]
+        ]
+    ],
+    itemOperations: [
+        "GET",
+        "DELETE"
+    ]
+)]
 class Livraison
 {
     #[ORM\Id]
@@ -22,21 +36,24 @@ class Livraison
 
     #[ORM\ManyToOne(targetEntity: Livreur::class, inversedBy: 'livraisons')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['post:livraison:view'])]
     private $livreur;
 
-    #[ORM\ManyToOne(targetEntity: Zone::class, inversedBy: 'livraisons')]
-    #[ORM\JoinColumn(nullable: false)]
-    private $zone;
-
     #[ORM\OneToMany(mappedBy: 'livraison', targetEntity: Commande::class)]
+    #[Groups(['post:livraison:view'])]
     private $commandes;
 
     #[ORM\Column(type: 'integer',options:["default"=>1])]
     private $etat;
 
+    #[ORM\Column(type: 'integer', nullable: true)]
+    private $prix;
+
     public function __construct()
     {
         $this->commandes = new ArrayCollection();
+        $this->date = new \DateTime();
+        $this->etat=1;
     }
 
     public function getId(): ?int
@@ -44,12 +61,12 @@ class Livraison
         return $this->id;
     }
 
-    public function getDate(): ?\DateTimeInterface
+    public function getDate(): ?\DateTime
     {
         return $this->date;
     }
 
-    public function setDate(\DateTimeInterface $date): self
+    public function setDate(\DateTime $date): self
     {
         $this->date = $date;
 
@@ -64,18 +81,6 @@ class Livraison
     public function setLivreur(?Livreur $livreur): self
     {
         $this->livreur = $livreur;
-
-        return $this;
-    }
-
-    public function getZone(): ?Zone
-    {
-        return $this->zone;
-    }
-
-    public function setZone(?Zone $zone): self
-    {
-        $this->zone = $zone;
 
         return $this;
     }
@@ -118,6 +123,18 @@ class Livraison
     public function setEtat(int $etat): self
     {
         $this->etat = $etat;
+
+        return $this;
+    }
+
+    public function getPrix(): ?int
+    {
+        return $this->prix;
+    }
+
+    public function setPrix(?int $prix): self
+    {
+        $this->prix = $prix;
 
         return $this;
     }

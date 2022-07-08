@@ -2,13 +2,13 @@
 
 namespace App\Security\Voter;
 
-use App\Entity\Quartier;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
-use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Core\Security;
+use \App\Entity\Livraison;
 
-class QuartierVoter extends Voter
+class LivraisonVoter extends Voter
 {
     private $_security;
     public function __construct(Security $security)
@@ -18,9 +18,10 @@ class QuartierVoter extends Voter
 
     protected function supports(string $attribute, $subject): bool
     {
+        // replace with your own logic
         // https://symfony.com/doc/current/security/voters.html
-        return in_array($attribute, ["EDIT","CREAT"])
-            && $subject instanceof Quartier;
+        return in_array($attribute, ["CAN_EDIT","CAN_READ","CAN_CREAT"])
+            && $subject instanceof Livraison;
     }
 
     protected function voteOnAttribute(string $attribute, $subject, TokenInterface $token): bool
@@ -30,21 +31,18 @@ class QuartierVoter extends Voter
         if (!$user instanceof UserInterface) {
             return false;
         }
-
         // ... (check conditions and return true to grant permission) ...
         switch ($attribute) {
-            case "EDIT":
+            case "CAN_EDIT":
                 $this->_security->isGranted("ROLE_GESTIONNAIRE");
-                // logic to determine if the user can EDIT
                 return true;
-                break;
-            case "CREAT":
+            case "CAN_READ":
+                $this->_security->isGranted("ROLE_VISITEUR");
+                return true;
+            case "CAN_CREAT":
                 $this->_security->isGranted("ROLE_GESTIONNAIRE");
-                // logic to determine if the user can VIEW
-                // return true or false
-                break;
+                return true;
         }
-
         return false;
     }
 }

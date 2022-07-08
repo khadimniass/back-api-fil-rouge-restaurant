@@ -34,8 +34,12 @@ class Quartier
     #[ORM\JoinColumn(nullable: false)]
     private $gestionnaire;
 
+    #[ORM\Column(type: 'string', length: 150, nullable: true)]
+    private $nom;
+
     public function __construct() {
         $this->addedAt= new \DateTime();
+        $this->etat=1;
     }
 
     public function getId(): ?int
@@ -75,6 +79,18 @@ class Quartier
     public function setGestionnaire(?Gestionnaire $gestionnaire): self
     {
         $this->gestionnaire = $gestionnaire;
+
+        return $this;
+    }
+
+    public function getNom(): ?string
+    {
+        return $this->nom;
+    }
+
+    public function setNom(?string $nom): self
+    {
+        $this->nom = $nom;
 
         return $this;
     }

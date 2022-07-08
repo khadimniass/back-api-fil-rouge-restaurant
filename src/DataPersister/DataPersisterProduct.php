@@ -34,12 +34,17 @@ class DataPersisterProduct implements ContextAwareDataPersisterInterface
 
     public function persist($data, array $context = [])
     {
+        //dd($data);
         if ($data->getImageBinary()){
             $data->setImage(file_get_contents($data->getImageBinary()));
         }
         if ($data instanceof Menu){
             $data->setPrix(CalculPrixMenu::prixMenu($data,0.5));
+            foreach ($data->getMenuBoissons() as $menu){
+                dd($menu);
+            }
         }
+        dd($data);
         $data->setGestionnaire($this->token->getUser());
         $data->setQuantity(1);
         $this->entityManager->persist($data);
@@ -47,8 +52,6 @@ class DataPersisterProduct implements ContextAwareDataPersisterInterface
     }
     /**
      * {@inheritdoc}
-     **/
-    /**
      * @param Produit $data
      */
     public function remove($data, array $context = [])
