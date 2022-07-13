@@ -1,2 +1,2 @@
 release: php bin/console cache:clear && php bin/console cache:warmup
-web: heroku-php-apache2  -C public/nginx_app.conf public/
+web: heroku-php-apache2  -C public/apache2.conf public/
