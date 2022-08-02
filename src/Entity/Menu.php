@@ -24,7 +24,7 @@ use Symfony\Component\Serializer\Annotation\SerializedName;
         ],
 
         "POST" => [
-     //     "denormalization_context" => ['groups' => ['view:menu']],
+          "denormalization_context" => ['groups' => ['post:view:menu']],
       ],
         "GET" => [
             'status' => Response::HTTP_OK,
@@ -39,27 +39,83 @@ use Symfony\Component\Serializer\Annotation\SerializedName;
 )]
 class Menu extends Produit
 {
-    #[Groups(['get:manu_read', 'view:menu'])]
+    #[Groups(['post:view:menu'])]
+    #[SerializedName('nom')]
+    protected $nomMenu;
+    #[Groups(['post:view:menu'])]
+    #[SerializedName('description')]
+    protected $descriptionMenu;
+    #[Groups(['post:view:menu'])]
+    #[SerializedName('image')]
+    protected $imageMenu;
+
+    /**
+     * @return mixed
+     */
+    public function getNomMenu()
+    {
+        return $this->nomMenu;
+    }
+
+    /**
+     * @param mixed $nomMenu
+     */
+    public function setNomMenu($nomMenu): void
+    {
+        $this->nomMenu = $nomMenu;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDescriptionMenu()
+    {
+        return $this->descriptionMenu;
+    }
+
+    /**
+     * @param mixed $descriptionMenu
+     */
+    public function setDescriptionMenu($descriptionMenu): void
+    {
+        $this->descriptionMenu = $descriptionMenu;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getImageMenu()
+    {
+        return $this->imageMenu;
+    }
+
+    /**
+     * @param mixed $imageMenu
+     */
+    public function setImageMenu($imageMenu): void
+    {
+        $this->imageMenu = $imageMenu;
+    }
+
+    #[Groups(['get:manu_read', 'post:view:menu'])]
     #[ORM\OneToMany(mappedBy: 'menu', targetEntity: MenuFrite::class,cascade:['persist'])]
     #[SerializedName('frites')]
     private $menuFrites;
 
-    #[Groups(['get:manu_read', 'view:menu'])]
+    #[Groups(['get:manu_read', 'post:view:menu'])]
     #[ORM\OneToMany(mappedBy: 'menu', targetEntity: MenuBoisson::class,cascade:['persist'])]
     #[SerializedName('boissons')]
     private $menuBoissons;
 
     #[ORM\OneToMany(mappedBy: 'menu', targetEntity: MenuBurger::class,cascade:['persist'])]
     #[SerializedName('burgers')]
-    #[Groups(['get:manu_read', 'view:menu'])]
+    #[Groups(['get:manu_read', 'post:view:menu'])]
     private $menuBurgers;
 
-    #[Groups(['view:menu'])]
-    protected $nom;
-    #[Groups(['view:menu'])]
-    protected $description;
-    #[Groups(['view:menu'])]
-    protected $image;
+    #[ORM\OneToMany(mappedBy: 'menu', targetEntity: MenuTaille::class)]
+    private $menuTailles;
+
+
 
     public function __construct()
     {
@@ -67,6 +123,7 @@ class Menu extends Produit
         $this->menuFrites = new ArrayCollection();
         $this->menuBoissons = new ArrayCollection();
         $this->menuBurgers = new ArrayCollection();
+        $this->menuTailles = new ArrayCollection();
     }
     /**
      * @return Collection<int, MenuFrite>
@@ -75,7 +132,6 @@ class Menu extends Produit
     {
         return $this->menuFrites;
     }
-
     public function addMenuFrite(MenuFrite $menuFrite): self
     {
         if (!$this->menuFrites->contains($menuFrite)) {
@@ -85,7 +141,6 @@ class Menu extends Produit
 
         return $this;
     }
-
     public function removeMenuFrite(MenuFrite $menuFrite): self
     {
         if ($this->menuFrites->removeElement($menuFrite)) {
@@ -98,14 +153,10 @@ class Menu extends Produit
         return $this;
     }
 
-    /**
-     * @return Collection<int, MenuBoisson>
-     */
-    public function getMenuBoissons(): Collection
+     public function getMenuBoissons(): Collection
     {
         return $this->menuBoissons;
     }
-
     public function addMenuBoisson(MenuBoisson $menuBoisson): self
     {
         if (!$this->menuBoissons->contains($menuBoisson)) {
@@ -115,7 +166,6 @@ class Menu extends Produit
 
         return $this;
     }
-
     public function removeMenuBoisson(MenuBoisson $menuBoisson): self
     {
         if ($this->menuBoissons->removeElement($menuBoisson)) {
@@ -126,6 +176,7 @@ class Menu extends Produit
         }
         return $this;
     }
+
     /**
      * @return Collection<int, MenuBurger>
      */
@@ -147,6 +198,36 @@ class Menu extends Produit
             // set the owning side to null (unless already changed)
             if ($menuBurger->getMenu() === $this) {
                 $menuBurger->setMenu(null);
+            }
+        }
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, MenuTaille>
+     */
+
+    public function getMenuTailles(): Collection
+    {
+        return $this->menuTailles;
+    }
+
+    public function addMenuTaille(MenuTaille $menuTaille): self
+    {
+        if (!$this->menuTailles->contains($menuTaille)) {
+            $this->menuTailles[] = $menuTaille;
+            $menuTaille->setMenu($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMenuTaille(MenuTaille $menuTaille): self
+    {
+        if ($this->menuTailles->removeElement($menuTaille)) {
+            // set the owning side to null (unless already changed)
+            if ($menuTaille->getMenu() === $this) {
+                $menuTaille->setMenu(null);
             }
         }
 

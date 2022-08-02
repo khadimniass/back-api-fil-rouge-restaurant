@@ -8,7 +8,8 @@ use ApiPlatform\Core\Annotation\ApiResource;
     collectionOperations:[
         "catalogue"=>[
             "method"=>"get",
-            "path"=>"/catalogues"
+            "path"=>"/catalogues",
+            'normalization_context' => ['groups' => ['get:read_catalogue']]
         ],
 ],
     itemOperations: []

@@ -23,9 +23,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 )]
 class Burger extends Produit
 {
-    #[ORM\ManyToMany(targetEntity: Boisson::class, mappedBy: 'burgers')]
-    private $boissons;
-
     #[ORM\ManyToMany(targetEntity: Frite::class, mappedBy: 'burgers')]
     private $frites;
 
@@ -35,38 +32,9 @@ class Burger extends Produit
     public function __construct()
     {
         parent::__construct();
-        $this->boissons = new ArrayCollection();
         $this->frites = new ArrayCollection();
         $this->menuBurgers = new ArrayCollection();
     }
-
-    /**
-     * @return Collection<int, Boisson>
-     */
-    public function getBoissons(): Collection
-    {
-        return $this->boissons;
-    }
-
-    public function addBoisson(Boisson $boisson): self
-    {
-        if (!$this->boissons->contains($boisson)) {
-            $this->boissons[] = $boisson;
-            $boisson->addBurger($this);
-        }
-
-        return $this;
-    }
-
-    public function removeBoisson(Boisson $boisson): self
-    {
-        if ($this->boissons->removeElement($boisson)) {
-            $boisson->removeBurger($this);
-        }
-
-        return $this;
-    }
-
     /**
      * @return Collection<int, Frite>
      */

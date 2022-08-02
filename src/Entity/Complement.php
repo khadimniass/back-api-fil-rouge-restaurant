@@ -8,7 +8,8 @@ use ApiPlatform\Core\Annotation\ApiResource;
     collectionOperations: [
         "complement"=>[
             "method" =>"get",
-            "path"=>"/complements"
+            "path"=>"/complements",
+            'normalization_context' => ['groups' => ['get:read_catalogue']]
         ]
     ],
     itemOperations: []

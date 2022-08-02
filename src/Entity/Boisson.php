@@ -7,104 +7,57 @@ use App\Repository\BoissonRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\HttpFoundation\Response;
 
 #[ORM\Entity(repositoryClass: BoissonRepository::class)]
-#[ApiResource]
+#[ApiResource(
+    collectionOperations:[
+        "get"=>[
+            'status' => Response::HTTP_OK,
+            "normalization_context"=>['groups' => ['get:view:boisson']]
+        ],
+        "post"=>[
+            "denormalization_context"=>['groups'=>['post:view:boisson']]
+        ]
+    ]
+)]
 class Boisson extends Produit
 {
-
-    #[ORM\ManyToMany(targetEntity: Taille::class, inversedBy: 'boissons')]
-    private $tailles;
-
-    #[ORM\ManyToMany(targetEntity: Burger::class, inversedBy: 'boissons')]
-    private $burgers;
-
-    #[ORM\OneToMany(mappedBy: 'boisson', targetEntity: MenuBoisson::class)]
-    private $menuBoissons;
+    #[ORM\OneToMany(mappedBy: 'boisson', targetEntity: TailleBoisson::class)]
+    private $tailleBoissons;
 
     public function __construct()
     {
         parent::__construct();
-        $this->tailles = new ArrayCollection();
-        $this->burgers = new ArrayCollection();
-        $this->menuBoissons = new ArrayCollection();
+        $this->tailleBoissons = new ArrayCollection();
     }
 
     /**
-     * @return Collection<int, Taille>
+     * @return Collection<int, TailleBoisson>
      */
-    public function getTailles(): Collection
+    public function getTailleBoissons(): Collection
     {
-        return $this->tailles;
+        return $this->tailleBoissons;
     }
 
-    public function addTaille(Taille $taille): self
+    public function addTailleBoisson(TailleBoisson $tailleBoisson): self
     {
-        if (!$this->tailles->contains($taille)) {
-            $this->tailles[] = $taille;
+        if (!$this->tailleBoissons->contains($tailleBoisson)) {
+            $this->tailleBoissons[] = $tailleBoisson;
+            $tailleBoisson->setBoisson($this);
         }
 
         return $this;
     }
 
-    public function removeTaille(Taille $taille): self
+    public function removeTailleBoisson(TailleBoisson $tailleBoisson): self
     {
-        $this->tailles->removeElement($taille);
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Burger>
-     */
-    public function getBurgers(): Collection
-    {
-        return $this->burgers;
-    }
-
-    public function addBurger(Burger $burger): self
-    {
-        if (!$this->burgers->contains($burger)) {
-            $this->burgers[] = $burger;
-        }
-
-        return $this;
-    }
-
-    public function removeBurger(Burger $burger): self
-    {
-        $this->burgers->removeElement($burger);
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, MenuBoisson>
-     */
-    public function getMenuBoissons(): Collection
-    {
-        return $this->menuBoissons;
-    }
-
-    public function addMenuBoisson(MenuBoisson $menuBoisson): self
-    {
-        if (!$this->menuBoissons->contains($menuBoisson)) {
-            $this->menuBoissons[] = $menuBoisson;
-            $menuBoisson->setBoisson($this);
-        }
-
-        return $this;
-    }
-
-    public function removeMenuBoisson(MenuBoisson $menuBoisson): self
-    {
-        if ($this->menuBoissons->removeElement($menuBoisson)) {
+        if ($this->tailleBoissons->removeElement($tailleBoisson)) {
             // set the owning side to null (unless already changed)
-            if ($menuBoisson->getBoisson() === $this) {
-                $menuBoisson->setBoisson(null);
+            if ($tailleBoisson->getBoisson() === $this) {
+                $tailleBoisson->setBoisson(null);
             }
         }
-
         return $this;
     }
 }

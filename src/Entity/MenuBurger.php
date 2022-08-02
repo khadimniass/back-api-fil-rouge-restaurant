@@ -6,6 +6,8 @@ use Doctrine\ORM\Mapping as ORM;
 use App\Repository\MenuBurgerRepository;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Serializer\Annotation\SerializedName;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: MenuBurgerRepository::class)]
 #[ApiResource]
@@ -20,11 +22,13 @@ class MenuBurger
     private $menu;
 
     #[ORM\ManyToOne(targetEntity: Burger::class, inversedBy: 'menuBurgers')]
-    #[Groups(['view:menu'])]
+    #[Groups(['post:view:menu'])]
+    #[Assert\NotBlank(message: 'Burger ne doit pas etre null')]
     private $burger;
 
     #[ORM\Column(type: 'integer', nullable: true)]
-    #[Groups(['get:manu_read', 'view:menu'])]
+    #[Groups(['get:manu_read', 'post:view:menu'])]
+    #[SerializedName('quantite')]
     private $quantiteBurger;
 
     public function getId(): ?int

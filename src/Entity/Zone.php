@@ -7,24 +7,43 @@ use App\Repository\ZoneRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: ZoneRepository::class)]
-#[ApiResource]
+#[ApiResource(
+    collectionOperations: [
+        "post"=>[
+            "denormalization_context"=>['groups'=>['post:view:zone']]
+        ],
+        "get"=>[
+        'status' => Response::HTTP_OK,
+        'normalization_context' => ['groups' => ['get:zone:read']]
+    ]
+    ],
+    itemOperations: [
+        "get"
+    ]
+)]
 class Zone
 {
 
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
+    #[Groups(['get:zone:read','post:view:zone'])]
     private $id;
 
     #[ORM\Column(type: 'string', length: 150)]
+    #[Groups(['get:zone:read','post:view:zone'])]
     private $nom;
 
     #[ORM\OneToMany(mappedBy: 'zone', targetEntity: Quartier::class)]
+    #[Groups(['get:zone:read','post:view:zone'])]
     private $quartiers;
 
     #[ORM\Column(type: 'integer',options: ['default'=>1])]
+    #[Groups(['get:zone:read','post:view:zone'])]
     private $etat;
 
     #[ORM\ManyToOne(targetEntity: Gestionnaire::class, inversedBy: 'zones')]
@@ -32,6 +51,7 @@ class Zone
     private $gestionnaire;
 
     #[ORM\Column(type: 'integer',nullable:true)]
+    #[Groups(['get:zone:read','post:view:zone'])]
     private $prixLivraison;
 
     #[ORM\OneToMany(mappedBy: 'zone', targetEntity: Commande::class)]

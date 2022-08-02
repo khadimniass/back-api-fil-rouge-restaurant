@@ -29,10 +29,13 @@ class Produit
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
+    #[Groups(['get:read_catalogue','get:read_catalogue'])]
     protected $id;
 
     #[ORM\Column(type: 'string', length: 100)]
-    #[Groups(['post:view:burger','get:view:burger'])]
+    #[Groups(['post:view:burger','get:view:burger',
+        'post:view:boisson','post:view:frite',
+        'get:read_catalogue','get:read_catalogue'])]
     protected $nom;
 
     /**
@@ -50,32 +53,37 @@ class Produit
     {
         $this->imageBinary = $imageBinary;
     }
-
+    #[Groups(['get:read_catalogue','get:read_catalogue'])]
     #[ORM\Column(type: 'integer',options: ['default'=>1])]
     protected $etat;
 
     #[ORM\Column(type: 'text')]
-    #[Groups(['post:view:burger','get:view:burger','get:manu_read'])]
+    #[Groups(['post:view:burger','get:view:burger',
+        'get:manu_read','post:view:boisson',
+        'post:view:frite','get:read_catalogue','get:read_catalogue'])]
     protected $description;
 
     #[ORM\Column(type: 'blob', nullable: true)]
-    #[Groups(['get:view:burger'])]
-    protected $image;
+    #[Groups(['get:manu_read','get:view:burger','get:read_catalogue','get:read_catalogue'])]
+    protected $image; //plainPassword
 
     #[SerializedName("image")]
-    #[Groups(['post:view:burger'])]
-    protected $imageBinary;
+    #[Groups(['post:view:burger','post:view:boisson','post:view:frite'])]
+    protected $imageBinary; //chemin qui mene vers l'image
 
     #[ORM\ManyToOne(targetEntity: Gestionnaire::class, inversedBy: 'produits')]
+    #[Groups(['get:read_catalogue','get:read_catalogue'])]
     private $gestionnaire;
 
-    #[Groups(['post:view:burger','get:view:burger','get:manu_read'])]
+    #[Groups(['get:read_catalogue','post:view:burger',
+        'get:view:burger','get:manu_read',
+        'post:view:boisson','post:view:frite','get:read_catalogue'])]
     #[ORM\Column(type: 'float', nullable: true)]
     private $prix;
 
     #[ORM\Column(type: 'integer')]
 //    #[SerializedName('quantity a stocker')]
-    #[Groups(['get:view:burger'])]
+    #[Groups(['get:view:burger','get:read_catalogue','get:read_catalogue'])]
     private $quantity;
 
     #[ORM\OneToMany(mappedBy: 'produit', targetEntity: LigneCommande::class, cascade: ["persist"])]
@@ -130,13 +138,14 @@ class Produit
 
     public function getImage()
     {
-        return (is_resource($this->image)) ? utf8_encode(base64_encode(stream_get_contents( ($this->image) ) ) ) : $this->image;
+        return is_resource($this->image) ?
+            utf8_encode(base64_encode(stream_get_contents(($this->image))))
+            : $this->image;
     }
 
     public function setImage($image): self
     {
         $this->image = $image;
-
         return $this;
     }
 
@@ -193,7 +202,6 @@ class Produit
 
         return $this;
     }
-
     public function removeLigneCommande(LigneCommande $ligneCommande): self
     {
         if ($this->ligneCommandes->removeElement($ligneCommande)) {
@@ -202,7 +210,6 @@ class Produit
                 $ligneCommande->setProduit(null);
             }
         }
-
         return $this;
     }
 

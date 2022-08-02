@@ -43,10 +43,6 @@ class Commande
     #[ORM\JoinColumn(nullable: false)]
     private $client;
 
-    #[ORM\ManyToOne(targetEntity: Promo::class, inversedBy: 'commandes')]
-    #[ORM\JoinColumn(nullable: true)]
-    private $promo;
-
     #[ORM\OneToMany(mappedBy: 'commande', targetEntity: LigneCommande::class,cascade:['persist'] )]
     #[SerializedName('Produits')]
     #[Groups(['view:commandes'])]
@@ -116,18 +112,6 @@ class Commande
         return $this;
     }
 
-    public function getPromo(): ?Promo
-    {
-        return $this->promo;
-    }
-
-    public function setPromo(?Promo $promo): self
-    {
-        $this->promo = $promo;
-
-        return $this;
-    }
-
     /**
      * @return Collection<int, LigneCommande>
      */
@@ -169,6 +153,4 @@ class Commande
 
         return $this;
     }
-
-  
 }

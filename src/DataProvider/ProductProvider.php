@@ -18,6 +18,7 @@ class ProductProvider implements ContextAwareCollectionDataProviderInterface, Re
     public function getCollection(string $resourceClass, string $operationName = null, array $context = [])
     {
         $produits = $this->repository->findAll();
+
         foreach ($produits as $prod){
             if ($prod->getImage()) {
              //   base64_encode(stream_get_contents($prod->getImage()));
@@ -31,6 +32,7 @@ class ProductProvider implements ContextAwareCollectionDataProviderInterface, Re
 
     public function supports(string $resourceClass, string $operationName = null, array $context = []): bool
     {
-        return $resourceClass==Menu::class || $resourceClass==Boisson::class || $resourceClass==Frite::class || $resourceClass==Burger::class;
+        return false;
+      //  return $resourceClass==Menu::class || $resourceClass==Boisson::class || $resourceClass==Frite::class || $resourceClass==Burger::class;
     }
 }

@@ -19,8 +19,8 @@ class CatalogueProvider implements ContextAwareCollectionDataProviderInterface, 
     {
       //  dd("Catalogue en construction...");
         return [
-            'menu'=>$this->menuRepository->findAll(),
-            'burger'=>$this->burgerRepository->findAll()
+            'menus'=>$this->menuRepository->findAll(),
+            'burgers'=>$this->burgerRepository->findAll()
         ];
     }
     public function supports(string $resourceClass, string $operationName = null, array $context = []): bool

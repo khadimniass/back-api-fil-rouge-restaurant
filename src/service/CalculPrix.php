@@ -4,11 +4,12 @@ namespace App\service;
 
 use App\Entity\{Burger, Boisson, Frite,};
 
-class CalculPrixMenu
+class CalculPrix
 {
   public static function prixMenu($menu,$pourcentage): float
   {
-    $prix = 0;
+    $prix = 10700;
+    /*
     foreach ($menu->getMenuBoissons() as $boisson) {
       $prix += $boisson->getBoisson()->getPrix() * $boisson->getQuantiteboisson();
     }
@@ -19,6 +20,8 @@ class CalculPrixMenu
       $prix += $frite->getFrite()->getPrix() * $frite->getQuantiteFrite();
     }
     return $prix*$pourcentage;
+    */
+      return $prix;
   }
 
 }

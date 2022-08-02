@@ -4,10 +4,11 @@ namespace App\DataPersister;
 
 use App\service\Archiver;
 use App\Entity\{Menu, Produit};
-use App\service\CalculPrixMenu;
+use App\service\CalculPrix;
 use App\Repository\ProduitRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use ApiPlatform\Core\DataPersister\ContextAwareDataPersisterInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
@@ -34,19 +35,18 @@ class DataPersisterProduct implements ContextAwareDataPersisterInterface
 
     public function persist($data, array $context = [])
     {
-        //dd($data);
+        if ($data instanceof Menu) {
+            $data->setNom($data->getNomMenu());
+            $data->setDescription($data->getDescriptionMenu());
+            $data->setImageBinary($data->getImageMenu());
+            $data->setPrix(CalculPrix::prixMenu($data,0.5));
+        }
         if ($data->getImageBinary()){
             $data->setImage(file_get_contents($data->getImageBinary()));
         }
-        if ($data instanceof Menu){
-            $data->setPrix(CalculPrixMenu::prixMenu($data,0.5));
-            foreach ($data->getMenuBoissons() as $menu){
-                dd($menu);
-            }
-        }
-        dd($data);
         $data->setGestionnaire($this->token->getUser());
         $data->setQuantity(1);
+       // dd("persister Product",$data);
         $this->entityManager->persist($data);
         $this->entityManager->flush();
     }

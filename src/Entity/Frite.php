@@ -7,9 +7,20 @@ use App\Repository\FriteRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\HttpFoundation\Response;
 
 #[ORM\Entity(repositoryClass: FriteRepository::class)]
-#[ApiResource]
+#[ApiResource(
+    collectionOperations:[
+        "get"=>[
+            'status' => Response::HTTP_OK,
+            "normalization_context"=>['groups' => ['get:view:frite']]
+        ],
+        "post"=>[
+            "denormalization_context"=>['groups'=>['post:view:frite']]
+        ]
+    ]
+)]
 class Frite extends Produit
 {
 

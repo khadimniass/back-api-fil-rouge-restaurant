@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use App\Repository\MenuFriteRepository;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Serializer\Annotation\SerializedName;
 
 #[ORM\Entity(repositoryClass: MenuFriteRepository::class)]
 #[ApiResource]
@@ -16,17 +17,18 @@ class MenuFrite
     #[ORM\Column(type: 'integer')]
     private $id;
 
-    #[ORM\Column(type: 'integer')]
-    #[Groups(['view:menu'])]
-    private $quantitefrite;
-
     #[ORM\ManyToOne(targetEntity: Menu::class, inversedBy: 'menuFrites')]
     private $menu;
 
     #[ORM\ManyToOne(targetEntity: Frite::class, inversedBy: 'menuFrites')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['view:menu'])]
+    #[Groups(['post:view:menu'])]
     private $frite;
+
+    #[ORM\Column(type: 'integer')]
+    #[Groups(['post:view:menu'])]
+    #[SerializedName('quantite')]
+    private $quantitefrite;
 
     public function getId(): ?int
     {
