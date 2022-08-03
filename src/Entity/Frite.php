@@ -24,8 +24,6 @@ use Symfony\Component\HttpFoundation\Response;
 class Frite extends Produit
 {
 
-    #[ORM\ManyToMany(targetEntity: Burger::class, inversedBy: 'frites')]
-    private $burgers;
 
     #[ORM\OneToMany(mappedBy: 'frite', targetEntity: MenuFrite::class)]
     private $menuFrites;
@@ -33,32 +31,7 @@ class Frite extends Produit
     public function __construct()
     {
         parent::__construct();
-        $this->burgers = new ArrayCollection();
         $this->menuFrites = new ArrayCollection();
-    }
-
-    /**
-     * @return Collection<int, Burger>
-     */
-    public function getBurgers(): Collection
-    {
-        return $this->burgers;
-    }
-
-    public function addBurger(Burger $burger): self
-    {
-        if (!$this->burgers->contains($burger)) {
-            $this->burgers[] = $burger;
-        }
-
-        return $this;
-    }
-
-    public function removeBurger(Burger $burger): self
-    {
-        $this->burgers->removeElement($burger);
-
-        return $this;
     }
 
     /**

@@ -42,13 +42,15 @@ security:
         - { path: ^/api/catalogues$, roles: PUBLIC_ACCESS, methods: GET }
         - { path: ^/api/complements$, roles: PUBLIC_ACCESS, methods: GET }
         - { path: ^/api/zones$, roles: PUBLIC_ACCESS, methods: GET }
+        - { path: ^/api/menu_boissons$, roles: PUBLIC_ACCESS, methods: GET }
+        - { path: ^/api/menu_tailles$, roles: PUBLIC_ACCESS, methods: GET }
+
+
         - { path: ^/api/livreurs, roles: ROLE_GESTIONNAIRE}
         - { path: ^/api/livraisons, roles: ROLE_GESTIONNAIRE}
         - { path: ^/api/users/validate, roles: PUBLIC_ACCESS, methods: PATCH }
         - { path: ^/api$, roles: PUBLIC_ACCESS }
         - { path: ^/api, roles: IS_AUTHENTICATED_FULLY}
-
-
         - { path: ^/api/commandes, roles: PUBLIC_ACCESS, methods: GET }
 when@test:
     security:

@@ -4,17 +4,17 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\ProduitRepository;
-use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Serializer\Annotation\SerializedName;
 
 #[ORM\Entity(repositoryClass: ProduitRepository::class)]
 #[ORM\InheritanceType("JOINED")]
 #[ORM\DiscriminatorColumn(name:"role",type: "string")]
-#[ORM\DiscriminatorMap(["menu" => "Menu","buger" => "Burger","boisson"=>"Boisson","frite"=>"Frite"])]
+#[ORM\DiscriminatorMap(["menu" => "Menu","burger" => "Burger","boisson"=>"Boisson","frite"=>"Frite"])]
 #[ApiResource(
     collectionOperations: [
         "get",
@@ -22,20 +22,33 @@ use Symfony\Component\Serializer\Annotation\SerializedName;
             "security"=>"is_granted('ROLE_GESTIONNAIRE')",
             "security_message"=>"acction non autorisée"
         ]
-    ]
+    ],itemOperations: [
+        "GET"=>[
+            "status"=>Response::HTTP_OK,
+            'normalization_context' => ['groups' => ['get:produit:detail','get:manu:detail']]
+        ]
+   ]
 )]
 class Produit
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    #[Groups(['get:read_catalogue','get:read_catalogue'])]
+    #[Groups([
+        'get:read_catalogue',
+        'get:read_catalogue',
+        'get:manu_read','get:manu:detail',
+        'get:produit:detail'
+        ])]
     protected $id;
 
     #[ORM\Column(type: 'string', length: 100)]
     #[Groups(['post:view:burger','get:view:burger',
         'post:view:boisson','post:view:frite',
-        'get:read_catalogue','get:read_catalogue'])]
+        'get:read_catalogue','get:read_catalogue',
+        'get:manu_read','get:manu:detail',
+        'get:produit:detail'
+        ])]
     protected $nom;
 
     /**
@@ -53,18 +66,26 @@ class Produit
     {
         $this->imageBinary = $imageBinary;
     }
-    #[Groups(['get:read_catalogue','get:read_catalogue'])]
+    #[Groups(['get:read_catalogue','get:read_catalogue',
+        'get:manu_read','get:manu:detail',
+        'get:produit:detail'
+    ])]
     #[ORM\Column(type: 'integer',options: ['default'=>1])]
     protected $etat;
 
     #[ORM\Column(type: 'text')]
     #[Groups(['post:view:burger','get:view:burger',
         'get:manu_read','post:view:boisson',
-        'post:view:frite','get:read_catalogue','get:read_catalogue'])]
+        'post:view:frite','get:read_catalogue','get:read_catalogue',
+        'get:manu_read','get:manu:detail','get:produit:detail'
+        ])]
     protected $description;
 
     #[ORM\Column(type: 'blob', nullable: true)]
-    #[Groups(['get:manu_read','get:view:burger','get:read_catalogue','get:read_catalogue'])]
+    #[Groups(['get:manu_read','get:view:burger',
+        'get:read_catalogue',
+        'get:manu:detail','get:produit:detail'
+        ])]
     protected $image; //plainPassword
 
     #[SerializedName("image")]
@@ -77,17 +98,22 @@ class Produit
 
     #[Groups(['get:read_catalogue','post:view:burger',
         'get:view:burger','get:manu_read',
-        'post:view:boisson','post:view:frite','get:read_catalogue'])]
+        'post:view:boisson','post:view:frite',
+        'get:read_catalogue','get:produit:detail',
+        'get:manu:detail'
+    ])]
     #[ORM\Column(type: 'float', nullable: true)]
-    private $prix;
+    protected $prix;
 
     #[ORM\Column(type: 'integer')]
-//    #[SerializedName('quantity a stocker')]
-    #[Groups(['get:view:burger','get:read_catalogue','get:read_catalogue'])]
-    private $quantity;
+    #[Groups(['get:view:burger','get:read_catalogue',
+        'get:read_catalogue','get:manu_read',
+        'get:manu:detail','get:produit:detail'
+    ])]
+    protected $quantity;
 
     #[ORM\OneToMany(mappedBy: 'produit', targetEntity: LigneCommande::class, cascade: ["persist"])]
-    private $ligneCommandes;
+    protected $ligneCommandes;
 
     public function __construct()
     {

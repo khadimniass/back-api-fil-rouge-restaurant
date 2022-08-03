@@ -16,19 +16,26 @@ class MenuBurger
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
+   // #[Groups(['get:manu:detail','get:produit:detail'])]
     private $id;
 
     #[ORM\ManyToOne(targetEntity: Menu::class, inversedBy: 'menuBurgers')]
     private $menu;
 
     #[ORM\ManyToOne(targetEntity: Burger::class, inversedBy: 'menuBurgers')]
-    #[Groups(['post:view:menu'])]
     #[Assert\NotBlank(message: 'Burger ne doit pas etre null')]
+    #[Groups([
+        'post:view:menu','get:manu:detail',
+        'get:produit:detail','get:read_catalogue'
+    ])]
     private $burger;
 
     #[ORM\Column(type: 'integer', nullable: true)]
-    #[Groups(['get:manu_read', 'post:view:menu'])]
-    #[SerializedName('quantite')]
+    #[Groups([
+        'get:manu_read', 'post:view:menu',
+        'get:produit:detail','get:read_catalogue'
+    ])]
+  //  #[SerializedName('quantite')]
     private $quantiteBurger;
 
     public function getId(): ?int
@@ -68,7 +75,6 @@ class MenuBurger
     public function setQuantiteBurger(?int $quantiteBurger): self
     {
         $this->quantiteBurger = $quantiteBurger;
-
         return $this;
     }
 }

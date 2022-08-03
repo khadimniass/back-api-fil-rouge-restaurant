@@ -7,33 +7,40 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\MenuBoissonRepository;
 use ApiPlatform\Core\Annotation\ApiResource;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Serializer\Annotation\SerializedName;
 
 #[ORM\Entity(repositoryClass: MenuBoissonRepository::class)]
-#[ApiResource]
+#[ApiResource(
+    itemOperations: [
+        "get"=>[
+            'status' => Response::HTTP_OK,
+            'normalization_context' => ['groups' => ['get:manu_read']]
+        ]
+    ],
+    collectionOperations: [
+        "get","post"
+    ]
+)]
 class MenuBoisson       //taille
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
+    #[Groups(['post:view:menu','get:produit:detail','get:manu:detail'])]
     private $id;
 
-    #[Groups(['post:view:menu'])]
-    #[ORM\Column(type: 'integer')]
-    #[SerializedName('quantite')]
-    private $quantiteboisson;
-
-
-    #[ORM\ManyToOne(targetEntity: Menu::class, inversedBy: 'menuBoissons')]
-    private $menu;
-
-
     #[ORM\OneToMany(mappedBy: 'menuBoisson', targetEntity: TailleBoisson::class)]
+    #[Groups(['get:manu:detail','get:produit:detail'])]
     private $tailleBoissons;
 
     #[ORM\OneToMany(mappedBy: 'taille', targetEntity: MenuTaille::class)]
     private $menuTailles;
+
+    #[ORM\Column(type: 'string', length: 50)]
+    #[Groups(['get:produit:detail','get:manu:detail'])]
+    private $nom;
 
     public function __construct()
     {
@@ -45,31 +52,6 @@ class MenuBoisson       //taille
     {
         return $this->id;
     }
-
-    public function getQuantiteboisson(): ?int
-    {
-        return $this->quantiteboisson;
-    }
-
-    public function setQuantiteboisson(int $quantiteboisson): self
-    {
-        $this->quantiteboisson = $quantiteboisson;
-        return $this;
-    }
-
-    public function getMenu(): ?Menu
-    {
-        return $this->menu;
-    }
-
-    public function setMenu(?Menu $menu): self
-    {
-        $this->menu = $menu;
-
-        return $this;
-    }
-
-
     /**
      * @return Collection<int, TailleBoisson>
      */
@@ -77,17 +59,14 @@ class MenuBoisson       //taille
     {
         return $this->tailleBoissons;
     }
-
     public function addTailleBoisson(TailleBoisson $tailleBoisson): self
     {
         if (!$this->tailleBoissons->contains($tailleBoisson)) {
             $this->tailleBoissons[] = $tailleBoisson;
             $tailleBoisson->setMenuBoisson($this);
         }
-
         return $this;
     }
-
     public function removeTailleBoisson(TailleBoisson $tailleBoisson): self
     {
         if ($this->tailleBoissons->removeElement($tailleBoisson)) {
@@ -96,7 +75,6 @@ class MenuBoisson       //taille
                 $tailleBoisson->setMenuBoisson(null);
             }
         }
-
         return $this;
     }
 
@@ -126,6 +104,18 @@ class MenuBoisson       //taille
                 $menuTaille->setTaille(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getNom(): ?string
+    {
+        return $this->nom;
+    }
+
+    public function setNom(string $nom): self
+    {
+        $this->nom = $nom;
 
         return $this;
     }

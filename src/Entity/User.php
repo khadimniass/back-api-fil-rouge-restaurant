@@ -83,10 +83,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[SerializedName("password")]
     protected $plainPassword;
 
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Commande::class)]
+    private $commandes;
+
     public function __construct()
     {
         $this->expireAt= new \DateTime('+1 day');
         $this->isEnable=false;
+        $this->commandes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -266,5 +270,35 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $table=strtoupper($table[2]);
         $this->roles[]='ROLE_'.$table;
         $this->etat = 1;
+    }
+
+    /**
+     * @return Collection<int, Commande>
+     */
+    public function getCommandes(): Collection
+    {
+        return $this->commandes;
+    }
+
+    public function addCommande(Commande $commande): self
+    {
+        if (!$this->commandes->contains($commande)) {
+            $this->commandes[] = $commande;
+            $commande->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCommande(Commande $commande): self
+    {
+        if ($this->commandes->removeElement($commande)) {
+            // set the owning side to null (unless already changed)
+            if ($commande->getUser() === $this) {
+                $commande->setUser(null);
+            }
+        }
+
+        return $this;
     }
 }

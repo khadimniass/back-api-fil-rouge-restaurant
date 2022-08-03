@@ -26,15 +26,10 @@ class CommandePersister implements ContextAwareDataPersisterInterface
     }
     public function persist($data, array $context = [])
     {
-        if ($this->token->getUser() instanceof Client) {
-            $data->setClient($this->token->getUser());
-        }
-
+        $data->setUser($this->token->getUser());
         $this->_entityManager->persist($data);
-       // dd($data);
         $this->_entityManager->flush();
     }
-
     public function remove($data, array $context = [])
     {
         Archiver::archiver($data);

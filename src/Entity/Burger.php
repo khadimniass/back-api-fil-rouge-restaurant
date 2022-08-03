@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use App\Repository\BurgerRepository;
 use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\HttpFoundation\Response;
 use Doctrine\Common\Collections\ArrayCollection;
 
@@ -23,8 +24,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 )]
 class Burger extends Produit
 {
-    #[ORM\ManyToMany(targetEntity: Frite::class, mappedBy: 'burgers')]
-    private $frites;
 
     #[ORM\OneToMany(mappedBy: 'burger', targetEntity: MenuBurger::class)]
     private $menuBurgers;
@@ -32,34 +31,7 @@ class Burger extends Produit
     public function __construct()
     {
         parent::__construct();
-        $this->frites = new ArrayCollection();
         $this->menuBurgers = new ArrayCollection();
-    }
-    /**
-     * @return Collection<int, Frite>
-     */
-    public function getFrites(): Collection
-    {
-        return $this->frites;
-    }
-
-    public function addFrite(Frite $frite): self
-    {
-        if (!$this->frites->contains($frite)) {
-            $this->frites[] = $frite;
-            $frite->addBurger($this);
-        }
-
-        return $this;
-    }
-
-    public function removeFrite(Frite $frite): self
-    {
-        if ($this->frites->removeElement($frite)) {
-            $frite->removeBurger($this);
-        }
-
-        return $this;
     }
 
     /**

@@ -7,6 +7,7 @@ use App\Repository\TailleBoissonRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: TailleBoissonRepository::class)]
 #[ApiResource]
@@ -15,12 +16,11 @@ class TailleBoisson
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
+    #[Groups(['get:manu:detail','get:produit:detail'])]
     private $id;
 
-    #[ORM\Column(type: 'integer', nullable: true)]
-    private $quantite;
-
     #[ORM\Column(type: 'float', nullable: true)]
+    #[Groups(['get:manu:detail','get:produit:detail'])]
     private $prix;
 
     #[ORM\OneToMany(mappedBy: 'tailleBoisson', targetEntity: LigneCommande::class)]
@@ -30,7 +30,12 @@ class TailleBoisson
     private $menuBoisson;
 
     #[ORM\ManyToOne(targetEntity: Boisson::class, inversedBy: 'tailleBoissons')]
+    #[Groups(['get:manu:detail','get:produit:detail'])]
     private $boisson;
+
+    #[ORM\Column(type: 'integer')]
+    #[Groups(['get:manu:detail','get:produit:detail'])]
+    private $qteBoissonDispo;
 
     public function __construct()
     {
@@ -42,27 +47,13 @@ class TailleBoisson
         return $this->id;
     }
 
-    public function getQuantite(): ?int
-    {
-        return $this->quantite;
-    }
-
-    public function setQuantite(?int $quantite): self
-    {
-        $this->quantite = $quantite;
-
-        return $this;
-    }
-
     public function getPrix(): ?float
     {
         return $this->prix;
     }
-
     public function setPrix(?float $prix): self
     {
         $this->prix = $prix;
-
         return $this;
     }
 
@@ -116,6 +107,18 @@ class TailleBoisson
     public function setBoisson(?Boisson $boisson): self
     {
         $this->boisson = $boisson;
+
+        return $this;
+    }
+
+    public function getQteBoissonDispo(): ?int
+    {
+        return $this->qteBoissonDispo;
+    }
+
+    public function setQteBoissonDispo(int $qteBoissonDispo): self
+    {
+        $this->qteBoissonDispo = $qteBoissonDispo;
 
         return $this;
     }

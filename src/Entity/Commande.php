@@ -39,10 +39,6 @@ class Commande
     #[ORM\JoinColumn(nullable: true)]
     private $livraison;
 
-    #[ORM\ManyToOne(targetEntity: Client::class, inversedBy: 'commandes')]
-    #[ORM\JoinColumn(nullable: false)]
-    private $client;
-
     #[ORM\OneToMany(mappedBy: 'commande', targetEntity: LigneCommande::class,cascade:['persist'] )]
     #[SerializedName('Produits')]
     #[Groups(['view:commandes'])]
@@ -51,6 +47,10 @@ class Commande
     #[ORM\ManyToOne(targetEntity: Zone::class, inversedBy: 'commandes')]
     #[Groups(['view:commandes'])]
     private $zone;
+
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'commandes')]
+    #[ORM\JoinColumn(nullable: false)]
+    private $user;
 
     public function __construct()
     {
@@ -100,18 +100,6 @@ class Commande
         return $this;
     }
 
-
-    public function getClient(): ?Client
-    {
-        return $this->client;
-    }
-
-    public function setClient(?Client $client): self
-    {
-        $this->client = $client;
-        return $this;
-    }
-
     /**
      * @return Collection<int, LigneCommande>
      */
@@ -150,6 +138,18 @@ class Commande
     public function setZone(?Zone $zone): self
     {
         $this->zone = $zone;
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
 
         return $this;
     }

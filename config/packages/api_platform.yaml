@@ -12,6 +12,6 @@ api_platform:
             page_parameter_name: _page
     formats:
         json: ['application/json'],
-        jsonld: [ 'application/json+ld' ]
-        html: [ 'text/html' ]
-        multipart: [ 'multipart/form-data' ]
+#        jsonld: [ 'application/json+ld' ]
+#        html: [ 'text/html' ]
+#        multipart: [ 'multipart/form-data' ]

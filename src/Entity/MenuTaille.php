@@ -30,37 +30,26 @@ class MenuTaille
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
+    #[Groups(['post:view:menu','get:produit:detail'])]
     private $id;
-
-    #[ORM\Column(type: 'integer', nullable: true)]
-    #[Groups(['get:manu_taille'])]
-    private $quantite;
 
     #[ORM\ManyToOne(targetEntity: Menu::class, inversedBy: 'menuTailles')]
     private $menu;
 
     #[ORM\ManyToOne(targetEntity: MenuBoisson::class, inversedBy: 'menuTailles')]
-    // $menuTaille
-    private $taille;
+    #[Groups(['post:view:menu','get:manu:detail','get:produit:detail'])]
+    private $taille;     // $menuTaille
 
     #[ORM\Column(type: 'integer', nullable: true, options: ['default'=>1])]
     private $etat;
 
+    #[ORM\Column(type: 'integer')]
+    #[Groups(['post:view:menu','get:produit:detail'])]
+    private $qteBoissondanMenu;
+
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getQuantite(): ?int
-    {
-        return $this->quantite;
-    }
-
-    public function setQuantite(?int $quantite): self
-    {
-        $this->quantite = $quantite;
-
-        return $this;
     }
 
     public function getMenu(): ?Menu
@@ -71,10 +60,8 @@ class MenuTaille
     public function setMenu(?Menu $menu): self
     {
         $this->menu = $menu;
-
         return $this;
     }
-
     public function getTaille(): ?MenuBoisson
     {
         return $this->taille;
@@ -95,6 +82,18 @@ class MenuTaille
     public function setEtat(?int $etat): self
     {
         $this->etat = $etat;
+        return $this;
+    }
+
+    public function getQteBoissondanMenu(): ?int
+    {
+        return $this->qteBoissondanMenu;
+    }
+
+    public function setQteBoissondanMenu(int $qteBoissondanMenu): self
+    {
+        $this->qteBoissondanMenu = $qteBoissondanMenu;
+
         return $this;
     }
 }
