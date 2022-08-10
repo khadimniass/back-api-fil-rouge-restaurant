@@ -7,19 +7,29 @@ use App\Repository\CommandeRepository;
 use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Serializer\Annotation\SerializedName;
 
 #[ORM\Entity(repositoryClass: CommandeRepository::class)]
 #[ApiResource(
     itemOperations:[
-        "get"
+        "get"=>[
+            'status' => Response::HTTP_OK,
+            "normalization_context" => ['groups' => ['get:detail:commande']],
+        ],
+        "put"=>[
+            'normalization_context' => ['groups' => ['put:detail:commande']]
+        ],
+        "PATCH"
     ],
     collectionOperations:[
         "post"=>[
             "denormalization_context"=>['groups'=>['view:commandes']]
         ],
-        "get"
+        "get"=>[
+            "normalization_context" => ['groups' => ['get:view:commande']],
+        ]
     ]
 )]
 class Commande
@@ -27,35 +37,45 @@ class Commande
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
+    #[Groups(['get:view:commande','put:detail:commande',
+        'get:detail:commande','get:detail:user'
+        ])]
     private $id;
 
-    #[ORM\Column(type: 'integer',options: ['defalt'=>1])]
+    #[ORM\Column(type: 'string', length : 50)]
+    #[Groups(['get:view:commande','get:detail:commande','get:detail:user'])]
     private $etat;
 
     #[ORM\Column(type: 'datetime')]
+    #[Groups(['get:view:commande','get:detail:commande','get:detail:user'])]
     private $addedAt;
 
     #[ORM\ManyToOne(targetEntity: Livraison::class, inversedBy: 'commandes')]
     #[ORM\JoinColumn(nullable: true)]
+    #[Groups(['get:detail:user'])]
     private $livraison;
 
     #[ORM\OneToMany(mappedBy: 'commande', targetEntity: LigneCommande::class,cascade:['persist'] )]
     #[SerializedName('Produits')]
-    #[Groups(['view:commandes'])]
+    #[Groups(['view:commandes','get:detail:commande','get:detail:user'])]
     private $ligneCommandes;
 
     #[ORM\ManyToOne(targetEntity: Zone::class, inversedBy: 'commandes')]
-    #[Groups(['view:commandes'])]
+    #[Groups(['view:commandes','get:view:commande','get:detail:commande','get:detail:user'])]
     private $zone;
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'commandes')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['get:detail:commande','get:view:commande'])]
     private $user;
+
+    #[ORM\Column(type: 'string', length: 50, nullable: true)]
+    private $numeroCommande;
 
     public function __construct()
     {
         $this->addedAt=new \DateTime();
-        $this->etat = 1;
+        $this->etat = "en cours";
       $this->ligneCommandes = new ArrayCollection();
     }
 
@@ -64,12 +84,12 @@ class Commande
         return $this->id;
     }
 
-    public function getEtat(): ?int
+    public function getEtat(): ?string
     {
         return $this->etat;
     }
 
-    public function setEtat(int $etat): self
+    public function setEtat(string $etat): self
     {
         $this->etat = $etat;
 
@@ -150,6 +170,18 @@ class Commande
     public function setUser(?User $user): self
     {
         $this->user = $user;
+
+        return $this;
+    }
+
+    public function getNumeroCommande(): ?string
+    {
+        return $this->numeroCommande;
+    }
+
+    public function setNumeroCommande(?string $numeroCommande): self
+    {
+        $this->numeroCommande = $numeroCommande;
 
         return $this;
     }

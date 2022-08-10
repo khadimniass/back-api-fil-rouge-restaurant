@@ -7,35 +7,53 @@ use App\Repository\TailleBoissonRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: TailleBoissonRepository::class)]
-#[ApiResource]
+#[ApiResource(
+    collectionOperations: [
+        "GET" => [
+
+        ],
+        "POST"
+    ],
+    itemOperations: [
+        "GET" => [
+            'status' => Response::HTTP_OK,
+            'normalization_context' => ['groups' => ['get:taille:boisson']]
+        ]
+    ]
+)]
 class TailleBoisson
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    #[Groups(['get:manu:detail','get:produit:detail'])]
+    #[Groups(['get:manu:detail','get:detail:taille',
+        'get:taille:boisson','get:view:boisson'])]
     private $id;
 
     #[ORM\Column(type: 'float', nullable: true)]
-    #[Groups(['get:manu:detail','get:produit:detail'])]
+    #[Groups(['get:manu:detail','get:produit:detail',
+        'get:taille:to:boisson:detail','get:view:boisson'
+    ])]
     private $prix;
 
     #[ORM\OneToMany(mappedBy: 'tailleBoisson', targetEntity: LigneCommande::class)]
     private $ligneCommandes;
 
-    #[ORM\ManyToOne(targetEntity: MenuBoisson::class, inversedBy: 'tailleBoissons')]
-    private $menuBoisson;
+    #[ORM\Column(type: 'integer')]
+    #[Groups(['get:manu:detail','get:produit:detail','get:taille:boisson',
+        'get:taille:to:boisson:detail','get:view:boisson'])]
+    private $qteBoissonDispo;
 
     #[ORM\ManyToOne(targetEntity: Boisson::class, inversedBy: 'tailleBoissons')]
-    #[Groups(['get:manu:detail','get:produit:detail'])]
+    #[Groups(['get:manu:detail','get:produit:detail','get:taille:boisson','get:taille:to:boisson:detail'])]
     private $boisson;
 
-    #[ORM\Column(type: 'integer')]
-    #[Groups(['get:manu:detail','get:produit:detail'])]
-    private $qteBoissonDispo;
+    #[ORM\ManyToOne(targetEntity: MenuBoisson::class, inversedBy: 'tailleBoissons')]
+    private $menuBoisson;
 
     public function __construct()
     {
@@ -87,14 +105,14 @@ class TailleBoisson
         return $this;
     }
 
-    public function getMenuBoisson(): ?MenuBoisson
+    public function getQteBoissonDispo(): ?int
     {
-        return $this->menuBoisson;
+        return $this->qteBoissonDispo;
     }
 
-    public function setMenuBoisson(?MenuBoisson $menuBoisson): self
+    public function setQteBoissonDispo(int $qteBoissonDispo): self
     {
-        $this->menuBoisson = $menuBoisson;
+        $this->qteBoissonDispo = $qteBoissonDispo;
 
         return $this;
     }
@@ -111,14 +129,14 @@ class TailleBoisson
         return $this;
     }
 
-    public function getQteBoissonDispo(): ?int
+    public function getMenuBoisson(): ?MenuBoisson
     {
-        return $this->qteBoissonDispo;
+        return $this->menuBoisson;
     }
 
-    public function setQteBoissonDispo(int $qteBoissonDispo): self
+    public function setMenuBoisson(?MenuBoisson $menuBoisson): self
     {
-        $this->qteBoissonDispo = $qteBoissonDispo;
+        $this->menuBoisson = $menuBoisson;
 
         return $this;
     }

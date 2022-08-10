@@ -20,7 +20,10 @@ use Symfony\Component\Serializer\Annotation\Groups;
         ]
     ],
     itemOperations: [
-        "get",
+        "get"=>[
+            'status' => Response::HTTP_OK,
+            'normalization_context' => ['groups' => ['get:detail:taille']]
+        ],
         "put",
         "delete"
     ]
@@ -30,48 +33,28 @@ class MenuTaille
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    #[Groups(['post:view:menu','get:produit:detail'])]
+        #[Groups(['post:view:menu','get:produit:detail','get:detail:taille'])]
     private $id;
-
-    #[ORM\ManyToOne(targetEntity: Menu::class, inversedBy: 'menuTailles')]
-    private $menu;
-
-    #[ORM\ManyToOne(targetEntity: MenuBoisson::class, inversedBy: 'menuTailles')]
-    #[Groups(['post:view:menu','get:manu:detail','get:produit:detail'])]
-    private $taille;     // $menuTaille
 
     #[ORM\Column(type: 'integer', nullable: true, options: ['default'=>1])]
     private $etat;
 
     #[ORM\Column(type: 'integer')]
-    #[Groups(['post:view:menu','get:produit:detail'])]
+    #[Groups(['post:view:menu','get:taille:to:boisson:detail','get:detail:taille',
+        'get:taille:to:boisson:detail','get:detail:taille'])]
     private $qteBoissondanMenu;
+
+    #[ORM\ManyToOne(targetEntity: MenuBoisson::class, inversedBy: 'menuTailles')]
+    #[Groups(['post:view:menu','get:detail:taille'])]
+    private $taille;     // $menuTaille
+
+    #[ORM\ManyToOne(targetEntity: Menu::class, inversedBy: 'menuTailles')]
+    #[Groups(['get:detail:taille'])]
+    private $menu;
 
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getMenu(): ?Menu
-    {
-        return $this->menu;
-    }
-
-    public function setMenu(?Menu $menu): self
-    {
-        $this->menu = $menu;
-        return $this;
-    }
-    public function getTaille(): ?MenuBoisson
-    {
-        return $this->taille;
-    }
-
-    public function setTaille(?MenuBoisson $taille): self
-    {
-        $this->taille = $taille;
-
-        return $this;
     }
 
     public function getEtat(): ?int
@@ -93,6 +76,30 @@ class MenuTaille
     public function setQteBoissondanMenu(int $qteBoissondanMenu): self
     {
         $this->qteBoissondanMenu = $qteBoissondanMenu;
+
+        return $this;
+    }
+
+    public function getTaille(): ?MenuBoisson
+    {
+        return $this->taille;
+    }
+
+    public function setTaille(?MenuBoisson $taille): self
+    {
+        $this->taille = $taille;
+
+        return $this;
+    }
+
+    public function getMenu(): ?Menu
+    {
+        return $this->menu;
+    }
+
+    public function setMenu(?Menu $menu): self
+    {
+        $this->menu = $menu;
 
         return $this;
     }

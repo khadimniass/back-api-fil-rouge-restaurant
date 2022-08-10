@@ -43,6 +43,7 @@ class Livreur extends User
         parent::__construct();
         $this->matriculeMoto="MOTO".date("YmdHis");
         $this->livraisons = new ArrayCollection();
+        $this->etat="disponible";
     }
 
     public function getMatriculeMoto(): ?string

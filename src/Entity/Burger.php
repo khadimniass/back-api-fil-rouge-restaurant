@@ -24,7 +24,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 )]
 class Burger extends Produit
 {
-
     #[ORM\OneToMany(mappedBy: 'burger', targetEntity: MenuBurger::class)]
     private $menuBurgers;
 
@@ -56,10 +55,11 @@ class Burger extends Produit
     {
         if ($this->menuBurgers->removeElement($menuBurger)) {
             // set the owning side to null (unless already changed)
-            if ($menuBurger->getBurgers() === $this) {
+            if ($menuBurger->getBurger() === $this) {
                 $menuBurger->setBurger(null);
             }
         }
+
         return $this;
     }
 }

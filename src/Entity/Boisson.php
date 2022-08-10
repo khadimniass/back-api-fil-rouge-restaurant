@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: BoissonRepository::class)]
 #[ApiResource(
@@ -24,6 +25,7 @@ use Symfony\Component\HttpFoundation\Response;
 class Boisson extends Produit
 {
     #[ORM\OneToMany(mappedBy: 'boisson', targetEntity: TailleBoisson::class)]
+    #[Groups(['get:view:boisson'])]
     private $tailleBoissons;
 
     public function __construct()
@@ -58,6 +60,8 @@ class Boisson extends Produit
                 $tailleBoisson->setBoisson(null);
             }
         }
+
         return $this;
     }
+
 }

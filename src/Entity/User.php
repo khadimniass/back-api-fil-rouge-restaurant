@@ -32,29 +32,32 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
         ]
     ],
     itemOperations:[
-        "get",
+        "get"=>[
+            'status' => Response::HTTP_OK,
+            "normalization_context" => ['groups' => ['get:detail:user']],
+        ],
         "put"
     ]
 )]
 
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
-    #[Groups(['user:read:simple'])]
+    #[Groups(['user:read:simple','get:detail:user','get:view:commande'])]
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
     protected $id;
 
-    #[Groups(['user:read:simple'])]
+    #[Groups(['user:read:simple','get:detail:commande','get:detail:user','get:view:commande'])]
     #[ORM\Column(type: 'string', length: 100)]
     #[Assert\NotBlank(message: "le nom doit pas etre null")]
     protected $nom;
 
-    #[Groups(['user:read:simple'])]
+    #[Groups(['user:read:simple','get:detail:commande','get:detail:user','get:view:commande'])]
     #[ORM\Column(type: 'string', length: 100)]
     protected $prenom;
     
-    #[Groups(['user:read:simple'])]
+    #[Groups(['user:read:simple','get:detail:commande','get:detail:user','get:view:commande'])]
     #[ORM\Column(type: 'string', length: 100, nullable: true)]
     protected $telephone;
 
@@ -68,7 +71,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'string')]
     protected $password;
 
-    #[ORM\Column(type: 'smallint', options:["default"=>1])]
+    #[ORM\Column(type: 'string', length: 50)]
     protected $etat;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
@@ -84,6 +87,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     protected $plainPassword;
 
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Commande::class)]
+    #[Groups(['get:detail:user'])]
     private $commandes;
 
     public function __construct()
@@ -198,12 +202,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getEtat(): ?int
+    public function getEtat(): ?string
     {
         return $this->etat;
     }
 
-    public function setEtat(int $etat): self
+    public function setEtat(string $etat): self
     {
         $this->etat = $etat;
 
@@ -211,7 +215,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * @return Collection<int, Catologue>
+     * @return Collection<string, Catologue>
      */
 
     public function getToken(): ?string
@@ -269,7 +273,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $table=explode('\\',$table);
         $table=strtoupper($table[2]);
         $this->roles[]='ROLE_'.$table;
-        $this->etat = 1;
+        //$this->etat = 1;
     }
 
     /**

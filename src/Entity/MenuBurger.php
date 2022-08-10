@@ -19,8 +19,13 @@ class MenuBurger
    // #[Groups(['get:manu:detail','get:produit:detail'])]
     private $id;
 
-    #[ORM\ManyToOne(targetEntity: Menu::class, inversedBy: 'menuBurgers')]
-    private $menu;
+    #[ORM\Column(type: 'integer', nullable: true)]
+    #[Groups([
+        'get:manu_read', 'post:view:menu',
+        'get:produit:detail','get:read_catalogue'
+    ])]
+  //  #[SerializedName('quantite')]
+    private $quantiteBurger;
 
     #[ORM\ManyToOne(targetEntity: Burger::class, inversedBy: 'menuBurgers')]
     #[Assert\NotBlank(message: 'Burger ne doit pas etre null')]
@@ -30,32 +35,27 @@ class MenuBurger
     ])]
     private $burger;
 
-    #[ORM\Column(type: 'integer', nullable: true)]
-    #[Groups([
-        'get:manu_read', 'post:view:menu',
-        'get:produit:detail','get:read_catalogue'
-    ])]
-  //  #[SerializedName('quantite')]
-    private $quantiteBurger;
+    #[ORM\ManyToOne(targetEntity: Menu::class, inversedBy: 'menuBurgers')]
+    private $menu;
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getMenu(): ?Menu
+
+    public function getQuantiteBurger(): ?int
     {
-        return $this->menu;
+        return $this->quantiteBurger;
     }
 
-    public function setMenu(?Menu $menu): self
+    public function setQuantiteBurger(?int $quantiteBurger): self
     {
-        $this->menu = $menu;
-
+        $this->quantiteBurger = $quantiteBurger;
         return $this;
     }
 
-    public function getBurgers(): ?Burger
+    public function getBurger(): ?Burger
     {
         return $this->burger;
     }
@@ -67,14 +67,15 @@ class MenuBurger
         return $this;
     }
 
-    public function getQuantiteBurger(): ?int
+    public function getMenu(): ?Menu
     {
-        return $this->quantiteBurger;
+        return $this->menu;
     }
 
-    public function setQuantiteBurger(?int $quantiteBurger): self
+    public function setMenu(?Menu $menu): self
     {
-        $this->quantiteBurger = $quantiteBurger;
+        $this->menu = $menu;
+
         return $this;
     }
 }

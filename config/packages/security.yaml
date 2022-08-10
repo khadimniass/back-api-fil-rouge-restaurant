@@ -36,15 +36,19 @@ security:
         - { path: ^/api/burgers, roles: PUBLIC_ACCESS, methods: GET }
         - { path: ^/api/burgers$, roles: ROLE_GESTIONNAIRE, methods: POST }
         - { path: ^/api/boissons, roles: PUBLIC_ACCESS, methods: GET }
-        - { path: ^/api/frites, roles: PUBLIC_ACCESS, methods: GET }
         - { path: ^/api/menus, roles: PUBLIC_ACCESS, methods: GET }
         - { path: ^/api/produits, roles: PUBLIC_ACCESS, methods: GET }
         - { path: ^/api/catalogues$, roles: PUBLIC_ACCESS, methods: GET }
         - { path: ^/api/complements$, roles: PUBLIC_ACCESS, methods: GET }
         - { path: ^/api/zones$, roles: PUBLIC_ACCESS, methods: GET }
-        - { path: ^/api/menu_boissons$, roles: PUBLIC_ACCESS, methods: GET }
+        - { path: ^/api/menu_boissons, roles: PUBLIC_ACCESS, methods: GET }
         - { path: ^/api/menu_tailles$, roles: PUBLIC_ACCESS, methods: GET }
-
+        - { path: ^/api/taille_boissons, roles: PUBLIC_ACCESS, methods: GET }
+        - { path: ^/api/commandes, roles: PUBLIC_ACCESS }
+        - { path: ^/api/users, roles: PUBLIC_ACCESS }
+        - { path: ^/api/frites, roles: PUBLIC_ACCESS}
+        - { path: ^/api/menu_tailles, roles: PUBLIC_ACCESS}
+        - { path: ^/api/livreurs, roles: PUBLIC_ACCESS}
 
         - { path: ^/api/livreurs, roles: ROLE_GESTIONNAIRE}
         - { path: ^/api/livraisons, roles: ROLE_GESTIONNAIRE}

@@ -31,11 +31,14 @@ class Zone
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    #[Groups(['get:zone:read','post:view:zone'])]
+    #[Groups(['get:zone:read','post:view:zone','get:detail:user'])]
     private $id;
 
     #[ORM\Column(type: 'string', length: 150)]
-    #[Groups(['get:zone:read','post:view:zone'])]
+    #[Groups(['get:zone:read','post:view:zone',
+        'get:view:commande','get:detail:commande',
+        'get:detail:user'
+    ])]
     private $nom;
 
     #[ORM\OneToMany(mappedBy: 'zone', targetEntity: Quartier::class)]
@@ -51,7 +54,7 @@ class Zone
     private $gestionnaire;
 
     #[ORM\Column(type: 'integer',nullable:true)]
-    #[Groups(['get:zone:read','post:view:zone'])]
+    #[Groups(['get:zone:read','post:view:zone','get:view:commande','get:detail:user'])]
     private $prixLivraison;
 
     #[ORM\OneToMany(mappedBy: 'zone', targetEntity: Commande::class)]

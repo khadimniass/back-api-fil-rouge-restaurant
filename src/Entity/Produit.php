@@ -36,9 +36,11 @@ class Produit
     #[ORM\Column(type: 'integer')]
     #[Groups([
         'get:read_catalogue',
-        'get:read_catalogue',
         'get:manu_read','get:manu:detail',
-        'get:produit:detail'
+        'get:produit:detail',
+        'get:taille:boisson','get:taille:to:boisson:detail',
+        'get:detail:commande','get:detail:user',
+        'get:view:frite','get:view:boisson','get:detail:taille'
         ])]
     protected $id;
 
@@ -47,7 +49,9 @@ class Produit
         'post:view:boisson','post:view:frite',
         'get:read_catalogue','get:read_catalogue',
         'get:manu_read','get:manu:detail',
-        'get:produit:detail'
+        'get:produit:detail','get:taille:to:boisson:detail',
+        'get:detail:commande','get:detail:user',
+        'get:view:frite','get:view:boisson'
         ])]
     protected $nom;
 
@@ -62,13 +66,13 @@ class Produit
     /**
      * @param mixed $imageBinary
      */
-    public function setImageBinary($imageBinary): void
+    public function setImageBinary($imageBinary) : void
     {
         $this->imageBinary = $imageBinary;
     }
     #[Groups(['get:read_catalogue','get:read_catalogue',
         'get:manu_read','get:manu:detail',
-        'get:produit:detail'
+        'get:produit:detail','get:view:frite','get:view:boisson'
     ])]
     #[ORM\Column(type: 'integer',options: ['default'=>1])]
     protected $etat;
@@ -77,14 +81,18 @@ class Produit
     #[Groups(['post:view:burger','get:view:burger',
         'get:manu_read','post:view:boisson',
         'post:view:frite','get:read_catalogue','get:read_catalogue',
-        'get:manu_read','get:manu:detail','get:produit:detail'
+        'get:manu_read','get:manu:detail','get:produit:detail','get:taille:boisson',
+        'get:taille:to:boisson:detail','get:view:frite','get:view:boisson'
         ])]
     protected $description;
 
     #[ORM\Column(type: 'blob', nullable: true)]
     #[Groups(['get:manu_read','get:view:burger',
         'get:read_catalogue',
-        'get:manu:detail','get:produit:detail'
+        'get:manu:detail','get:produit:detail',
+        'get:taille:boisson','get:taille:to:boisson:detail',
+        'get:detail:commande','get:detail:user',
+        'get:view:frite','get:view:boisson'
         ])]
     protected $image; //plainPassword
 
@@ -100,7 +108,8 @@ class Produit
         'get:view:burger','get:manu_read',
         'post:view:boisson','post:view:frite',
         'get:read_catalogue','get:produit:detail',
-        'get:manu:detail'
+        'get:manu:detail','get:detail:commande',
+        'get:detail:user','get:view:frite'
     ])]
     #[ORM\Column(type: 'float', nullable: true)]
     protected $prix;
@@ -108,7 +117,9 @@ class Produit
     #[ORM\Column(type: 'integer')]
     #[Groups(['get:view:burger','get:read_catalogue',
         'get:read_catalogue','get:manu_read',
-        'get:manu:detail','get:produit:detail'
+        'get:manu:detail','get:produit:detail',
+        'get:taille:to:boisson:detail',
+        'get:view:frite'
     ])]
     protected $quantity;
 

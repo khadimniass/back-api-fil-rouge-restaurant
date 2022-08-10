@@ -19,20 +19,22 @@ class LigneCommande
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
+    #[Groups(['get:detail:commande','get:detail:user'])]
     private $id;
 
     #[ORM\Column(type: 'integer')]
-    #[Groups(['view:commandes'])]
+    #[Groups(['view:commandes','get:detail:commande','get:detail:user'])]
     private $quantity;
 
     #[ORM\ManyToOne(targetEntity: Commande::class, inversedBy: 'ligneCommandes')]
     private $commande;
 
-    #[Groups(['view:commandes'])]
+    #[Groups(['view:commandes','get:detail:commande','get:detail:user'])]
     #[ORM\ManyToOne(targetEntity: Produit::class, inversedBy: 'ligneCommandes')]
     private $produit;
 
     #[ORM\Column(type: 'float', nullable: true)]
+    #[Groups(['get:detail:commande'])]
     private $prix;
 
     #[ORM\ManyToOne(targetEntity: TailleBoisson::class, inversedBy: 'ligneCommandes')]

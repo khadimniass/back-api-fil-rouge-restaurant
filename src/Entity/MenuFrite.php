@@ -22,12 +22,12 @@ class MenuFrite
 
     #[ORM\ManyToOne(targetEntity: Frite::class, inversedBy: 'menuFrites')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['post:view:menu','get:read_catalogue'])]
+    #[Groups(['post:view:menu','get:read_catalogue','get:manu_read','get:manu:detail','get:read_catalogue'])]
     private $frite;
 
     #[ORM\Column(type: 'integer')]
-    #[Groups(['post:view:menu','get:read_catalogue'])]
-    #[SerializedName('quantite')]
+    #[Groups(['post:view:menu','get:read_catalogue','get:manu_read','get:manu:detail'])]
+  //  #[SerializedName('quantite')]
     private $quantitefrite;
 
     public function getId(): ?int

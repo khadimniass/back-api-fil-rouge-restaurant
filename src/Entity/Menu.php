@@ -52,7 +52,7 @@ class Menu extends Produit
     protected $imageMenu;
 
     /**
-     * @return mixed
+     ** @return mixed
      */
     public function getNomMenu()
     {
@@ -104,20 +104,19 @@ class Menu extends Produit
     #[SerializedName('frites')]
     private $menuFrites;
 
-    #[ORM\OneToMany(mappedBy: 'menu', targetEntity: MenuBurger::class, cascade:['persist'])]
     #[SerializedName('burgers')]
     #[Groups([
         'get:manu_read',
         'post:view:menu','get:manu:detail',
         'get:produit:detail','get:read_catalogue'
     ])]
+    #[ORM\OneToMany(mappedBy: 'menu', targetEntity: MenuBurger::class, cascade:['persist'])]
     private $menuBurgers;
 
+    #[Groups(['post:view:menu','get:manu:detail','get:produit:detail','get:taille:to:boisson:detail'])]
     #[ORM\OneToMany(mappedBy: 'menu', targetEntity: MenuTaille::class,cascade:['persist'])]
-    #[Groups(['post:view:menu','get:manu:detail','get:produit:detail'])]
+    #[SerializedName('tailles')]
     private $menuTailles;
-
-
 
     public function __construct()
     {
@@ -153,7 +152,6 @@ class Menu extends Produit
 
         return $this;
     }
-
     /**
      * @return Collection<int, MenuBurger>
      */
@@ -161,6 +159,8 @@ class Menu extends Produit
     {
         return $this->menuBurgers;
     }
+
+
     public function addMenuBurger(MenuBurger $menuBurger): self
     {
         if (!$this->menuBurgers->contains($menuBurger)) {
@@ -169,6 +169,7 @@ class Menu extends Produit
         }
         return $this;
     }
+
     public function removeMenuBurger(MenuBurger $menuBurger): self
     {
         if ($this->menuBurgers->removeElement($menuBurger)) {
@@ -177,24 +178,24 @@ class Menu extends Produit
                 $menuBurger->setMenu(null);
             }
         }
+
         return $this;
     }
 
     /**
      * @return Collection<int, MenuTaille>
      */
-
     public function getMenuTailles(): Collection
     {
         return $this->menuTailles;
     }
+
     public function addMenuTaille(MenuTaille $menuTaille): self
     {
         if (!$this->menuTailles->contains($menuTaille)) {
             $this->menuTailles[] = $menuTaille;
             $menuTaille->setMenu($this);
         }
-
         return $this;
     }
 
@@ -206,6 +207,7 @@ class Menu extends Produit
                 $menuTaille->setMenu(null);
             }
         }
+
         return $this;
     }
 }
