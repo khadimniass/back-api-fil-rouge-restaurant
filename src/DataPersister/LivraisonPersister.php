@@ -37,17 +37,20 @@ class LivraisonPersister implements ContextAwareDataPersisterInterface
                 }
             }
         }
+   //     dd($data->getCommandes()[0]->getZone()->getPrixLivraison());
         for ($i=0; $i<count($data->getCommandes()); $i++){
             if($data->getCommandes()[$i]->getZone()){
-                $prixLivraison = $data->getCommandes()[$i]->getZone()->getPrixLivraison();
+             /*   $prixLivraison = $data->getCommandes()[$i]->getZone()->getPrixLivraison();
                 $prixduproduit= $data->getCommandes()[$i]->getLigneCommandes()[$i]->getProduit()->getPrix();
-             //   dump("prix livrainson", $prixLivraison);
-              //  dump("prix du produit", $prixduproduit);
-                $prixTotal+=$prixduproduit+$prixLivraison;
-             }
+                $prixTotal+=$prixduproduit+$prixLivraison; */
+            }
+           // dump("prix livraison", $data->getCommandes()[$i]->getZone()->getPrixLivraison());
+          //  dd($data->getCommandes()[$i]->getLigneCommandes());
         }
+        //dd("apres calcul prix", $prixTotal);
+        //dd($data->getCommandes()[0]->getLigneCommandes()[0]->getProduit()->getprix());
         $data->setPrix($prixTotal);
-        dd($data);
+        //dd("donnez avec prix",$data);
         $this->_entityManager->persist($data);
         $this->_entityManager->flush();
     }

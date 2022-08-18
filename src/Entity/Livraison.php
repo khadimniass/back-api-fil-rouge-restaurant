@@ -7,6 +7,7 @@ use App\Repository\LivraisonRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: LivraisonRepository::class)]
@@ -14,13 +15,16 @@ use Symfony\Component\Serializer\Annotation\Groups;
     collectionOperations: [
         "GET",
         "POST"=>[
-            "security"=>"is_granted('ROLE_GESTIONNAIRE')",
-    //        "security_message"=>"vous etes pas autorisée a effectuer cette action"
+            // "security"=>"is_granted('ROLE_GESTIONNAIRE')",
+            // "security_message"=>"vous etes pas autorisée a effectuer cette action",
             "denormalization_context"=>['groups'=>['post:livraison:view']]
         ]
     ],
     itemOperations: [
-        "GET",
+        "GET"=>[
+            'status' => Response::HTTP_OK,
+            "normalization_context" => ['groups' => ['get:detail:livraison']]
+        ],
         "DELETE"
     ]
 )]
@@ -29,24 +33,30 @@ class Livraison
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
+    #[Groups(['user:read:simple','get:detail:livreur','get:detail:livraison'])]
     private $id;
 
-    #[ORM\Column(type: 'date')]
+    #[ORM\Column(type: 'datetime')]
+    #[Groups(['user:read:simple','get:detail:livreur','get:detail:livraison'])]
     private $date;
 
     #[ORM\ManyToOne(targetEntity: Livreur::class, inversedBy: 'livraisons')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['post:livraison:view'])]
+    #[Groups(['post:livraison:view','get:detail:livraison'])]
     private $livreur;
 
     #[ORM\OneToMany(mappedBy: 'livraison', targetEntity: Commande::class)]
-    #[Groups(['post:livraison:view'])]
+    #[Groups(['post:livraison:view',
+        'user:read:simple','get:detail:livreur',
+        'get:detail:livraison'])]
     private $commandes;
 
     #[ORM\Column(type: 'integer',options:["default"=>1])]
+    #[Groups(['user:read:simple','get:detail:livreur'])]
     private $etat;
 
     #[ORM\Column(type: 'integer', nullable: true)]
+    #[Groups(['get:detail:livreur'])]
     private $prix;
 
     public function __construct()
@@ -81,10 +91,8 @@ class Livraison
     public function setLivreur(?Livreur $livreur): self
     {
         $this->livreur = $livreur;
-
         return $this;
     }
-
     /**
      * @return Collection<int, Commande>
      */

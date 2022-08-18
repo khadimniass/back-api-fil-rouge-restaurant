@@ -23,12 +23,18 @@ use Symfony\Component\Serializer\Annotation\Groups;
         "security_message"=>"acction non autorisée"
     ]
     ],
-    itemOperations:["put","get"]
+    itemOperations:[
+        "put",
+        "get"=>[
+            'status' => Response::HTTP_OK,
+            'normalization_context' =>['groups' => ['get:detail:livreur']],
+        ]
+    ]
 )]
 class Livreur extends User
 {
     #[ORM\Column(type: 'string', length: 100)]
-    #[Groups('user:read:simple')]
+    #[Groups(['user:read:simple','get:detail:livreur'])]
     private $matriculeMoto;
 
     #[ORM\ManyToOne(targetEntity: Gestionnaire::class, inversedBy: 'livreurs')]
@@ -36,6 +42,7 @@ class Livreur extends User
     private $gestionnaire;
 
     #[ORM\OneToMany(mappedBy: 'livreur', targetEntity: Livraison::class)]
+    #[Groups(['user:read:simple','get:detail:livreur'])]
     private $livraisons;
 
     public function __construct()

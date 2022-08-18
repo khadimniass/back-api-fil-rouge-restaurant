@@ -34,6 +34,7 @@ class DataPersisterProduct implements ContextAwareDataPersisterInterface
 
     public function persist($data, array $context = [])
     {
+        // dd($data);
         if ($data instanceof Menu) {
             $data->setNom($data->getNomMenu());
             $data->setDescription($data->getDescriptionMenu());
@@ -43,7 +44,9 @@ class DataPersisterProduct implements ContextAwareDataPersisterInterface
         if ($data->getImageBinary()){
             $data->setImage(file_get_contents($data->getImageBinary()));
         }
+        /*
         $data->setGestionnaire($this->token->getUser());
+        */
         $data->setQuantity(1);
        // dd("persister Product",$data);
         $this->entityManager->persist($data);

@@ -37,17 +37,23 @@ class Commande
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    #[Groups(['get:view:commande','put:detail:commande',
-        'get:detail:commande','get:detail:user'
+    #[Groups([
+        'get:view:commande','put:detail:commande',
+        'get:detail:commande','get:detail:user',
+        'user:read:simple','get:detail:livreur',
+        'get:detail:livraison'
         ])]
     private $id;
 
     #[ORM\Column(type: 'string', length : 50)]
-    #[Groups(['get:view:commande','get:detail:commande','get:detail:user'])]
+    #[Groups(['get:view:commande',
+        'get:detail:commande','get:detail:user',
+        'user:read:simple','get:detail:livreur','get:detail:livraison'])]
     private $etat;
 
     #[ORM\Column(type: 'datetime')]
-    #[Groups(['get:view:commande','get:detail:commande','get:detail:user'])]
+    #[Groups(['get:view:commande','get:detail:commande','get:detail:user',
+        'get:detail:livreur','get:detail:livraison'])]
     private $addedAt;
 
     #[ORM\ManyToOne(targetEntity: Livraison::class, inversedBy: 'commandes')]
@@ -61,12 +67,15 @@ class Commande
     private $ligneCommandes;
 
     #[ORM\ManyToOne(targetEntity: Zone::class, inversedBy: 'commandes')]
-    #[Groups(['view:commandes','get:view:commande','get:detail:commande','get:detail:user'])]
+    #[Groups([
+        'view:commandes','get:view:commande',
+        'get:detail:commande','get:detail:user',
+        'get:detail:livreur','get:detail:livraison'])]
     private $zone;
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'commandes')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['get:detail:commande','get:view:commande'])]
+    #[Groups(['get:detail:commande','get:view:commande','get:detail:livreur'])]
     private $user;
 
     #[ORM\Column(type: 'string', length: 50, nullable: true)]
@@ -76,7 +85,8 @@ class Commande
     {
         $this->addedAt=new \DateTime();
         $this->etat = "en cours";
-      $this->ligneCommandes = new ArrayCollection();
+        $this->ligneCommandes = new ArrayCollection();
+        $this->numeroCommande = "COM".date("YmdHis");
     }
 
     public function getId(): ?int

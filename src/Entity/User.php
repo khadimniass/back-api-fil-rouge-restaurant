@@ -42,22 +42,25 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
-    #[Groups(['user:read:simple','get:detail:user','get:view:commande'])]
+    #[Groups(['user:read:simple','get:detail:user','get:view:commande',
+        'get:detail:livreur','get:detail:livraison'])]
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
     protected $id;
 
-    #[Groups(['user:read:simple','get:detail:commande','get:detail:user','get:view:commande'])]
+    #[Groups(['user:read:simple','get:detail:commande','get:detail:user',
+        'get:view:commande','get:detail:livreur','get:detail:livraison'])]
     #[ORM\Column(type: 'string', length: 100)]
     #[Assert\NotBlank(message: "le nom doit pas etre null")]
     protected $nom;
 
-    #[Groups(['user:read:simple','get:detail:commande','get:detail:user','get:view:commande'])]
+    #[Groups(['user:read:simple','get:detail:commande','get:detail:user',
+        'get:view:commande','get:detail:livreur','get:detail:livraison'])]
     #[ORM\Column(type: 'string', length: 100)]
     protected $prenom;
     
-    #[Groups(['user:read:simple','get:detail:commande','get:detail:user','get:view:commande'])]
+    #[Groups(['user:read:simple','get:detail:commande','get:detail:user','get:view:commande','get:detail:livreur'])]
     #[ORM\Column(type: 'string', length: 100, nullable: true)]
     protected $telephone;
 
@@ -66,12 +69,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(type: 'string', length: 180, unique: true)]
   //  #[Assert\Unique(message: 'ce champ doit etre unique')]
+    #[Groups(['get:detail:livreur'])]
     protected $login;
 
     #[ORM\Column(type: 'string')]
     protected $password;
 
     #[ORM\Column(type: 'string', length: 50)]
+    #[Groups(['user:read:simple','get:detail:livreur'])]
     protected $etat;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]

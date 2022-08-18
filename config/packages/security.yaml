@@ -28,6 +28,8 @@ security:
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
+#        - { path: ^/api$, roles: PUBLIC_ACCESS }
+        - { path: ^/api, roles: PUBLIC_ACCESS }
         - { path: ^/api/docs, roles: IS_AUTHENTICATED_FULLY }
         - { path: ^/api/login, roles: PUBLIC_ACCESS }
         - { path: ^/api/register, roles: PUBLIC_ACCESS }
@@ -46,14 +48,14 @@ security:
         - { path: ^/api/taille_boissons, roles: PUBLIC_ACCESS, methods: GET }
         - { path: ^/api/commandes, roles: PUBLIC_ACCESS }
         - { path: ^/api/users, roles: PUBLIC_ACCESS }
-        - { path: ^/api/frites, roles: PUBLIC_ACCESS}
-        - { path: ^/api/menu_tailles, roles: PUBLIC_ACCESS}
-        - { path: ^/api/livreurs, roles: PUBLIC_ACCESS}
+        - { path: ^/api/frites, roles: PUBLIC_ACCESS }
+        - { path: ^/api/menu_tailles, roles: PUBLIC_ACCESS }
+        - { path: ^/api/livreurs, roles: PUBLIC_ACCESS }
+        - { path: ^/api/livraisons, roles: PUBLIC_ACCESS, methods: POST }
 
-        - { path: ^/api/livreurs, roles: ROLE_GESTIONNAIRE}
-        - { path: ^/api/livraisons, roles: ROLE_GESTIONNAIRE}
+#        - { path: ^/api/livreurs, roles: ROLE_GESTIONNAIRE}
+#        - { path: ^/api/livraisons, roles: ROLE_GESTIONNAIRE}
         - { path: ^/api/users/validate, roles: PUBLIC_ACCESS, methods: PATCH }
-        - { path: ^/api$, roles: PUBLIC_ACCESS }
         - { path: ^/api, roles: IS_AUTHENTICATED_FULLY}
         - { path: ^/api/commandes, roles: PUBLIC_ACCESS, methods: GET }
 when@test:
