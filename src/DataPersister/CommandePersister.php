@@ -26,7 +26,7 @@ class CommandePersister implements ContextAwareDataPersisterInterface
     }
     public function persist($data, array $context = [])
     {
-        dd($data);
+        //dd($data);
         //$data->setUser($this->token->getUser());
         //$data->setEtat($this->token->getUser());
         $this->_entityManager->persist($data);

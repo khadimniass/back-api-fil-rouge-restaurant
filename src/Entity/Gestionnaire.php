@@ -46,7 +46,6 @@ class Gestionnaire extends User
         $this->zones = new ArrayCollection();
         $this->livreurs = new ArrayCollection();
     }
-
     /**
      * @return Collection<int, Livreur>
      */
