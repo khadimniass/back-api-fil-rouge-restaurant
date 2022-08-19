@@ -79,6 +79,7 @@ class Commande
     private $user;
 
     #[ORM\Column(type: 'string', length: 50, nullable: true)]
+    #[Groups(['get:view:commande','get:detail:commande'])]
     private $numeroCommande;
 
     public function __construct()
