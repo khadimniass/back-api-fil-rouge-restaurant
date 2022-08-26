@@ -26,7 +26,6 @@ class CommandePersister implements ContextAwareDataPersisterInterface
     }
     public function persist($data, array $context = [])
     {
-        //dd($data);
         //$data->setUser($this->token->getUser());
         //$data->setEtat($this->token->getUser());
         $this->_entityManager->persist($data);
@@ -34,7 +33,7 @@ class CommandePersister implements ContextAwareDataPersisterInterface
     }
     public function remove($data, array $context = [])
     {
-        dd("on remove");
+        //dd("on remove");
         //Archiver::archiver($data);
         $this->_entityManager->persist($data);
         $this->_entityManager->flush();

@@ -89,12 +89,16 @@ class Commande
         ])]
     private $numeroCommande;
 
+    #[ORM\Column(type: 'integer', nullable: true)]
+    private $code;
+
     public function __construct()
     {
         $this->addedAt=new \DateTime();
         $this->etat = "en cours";
         $this->ligneCommandes = new ArrayCollection();
         $this->numeroCommande = "COM".date("YmdHis");
+        $this->code = rand(1000,9999);
     }
 
     public function getId(): ?int
@@ -200,6 +204,18 @@ class Commande
     public function setNumeroCommande(?string $numeroCommande): self
     {
         $this->numeroCommande = $numeroCommande;
+
+        return $this;
+    }
+
+    public function getCode(): ?int
+    {
+        return $this->code;
+    }
+
+    public function setCode(?int $code): self
+    {
+        $this->code = $code;
 
         return $this;
     }
