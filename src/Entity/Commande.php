@@ -90,6 +90,9 @@ class Commande
     private $numeroCommande;
 
     #[ORM\Column(type: 'integer', nullable: true)]
+    #[Groups(['get:view:commande','get:detail:commande',
+        'get:detail:user','get:detail:livraison',
+    ])]
     private $code;
 
     public function __construct()
