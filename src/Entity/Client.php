@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use App\Entity\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -24,6 +26,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
     ],
     itemOperations:["put","get","delete"]
 )]
+#[ApiFilter(SearchFilter::class, properties: ['login' => 'exact'])]
 class Client extends User
 {
     #[ORM\Column(type: 'string', length: 100)]
@@ -33,6 +36,7 @@ class Client extends User
     public function __construct()
     {
         parent::__construct();
+        $this->etat='actif';
     }
     public function getAdresse(): ?string
     {

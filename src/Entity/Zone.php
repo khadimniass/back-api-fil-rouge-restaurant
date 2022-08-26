@@ -31,13 +31,16 @@ class Zone
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    #[Groups(['get:zone:read','post:view:zone','get:detail:user','get:detail:livreur','get:detail:livraison'])]
+    #[Groups(['get:zone:read','post:view:zone',
+        'get:detail:user','get:detail:livreur',
+        'get:detail:livraison','get:all:user'])]
     private $id;
 
     #[ORM\Column(type: 'string', length: 150)]
     #[Groups(['get:zone:read','post:view:zone',
         'get:view:commande','get:detail:commande',
-        'get:detail:user','get:detail:livreur','get:detail:livraison'
+        'get:detail:user','get:detail:livreur',
+        'get:detail:livraison','get:all:user'
     ])]
     private $nom;
 

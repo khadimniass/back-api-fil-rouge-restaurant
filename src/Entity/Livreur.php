@@ -42,7 +42,7 @@ class Livreur extends User
     private $gestionnaire;
 
     #[ORM\OneToMany(mappedBy: 'livreur', targetEntity: Livraison::class)]
-    #[Groups(['user:read:simple','get:detail:livreur'])]
+    #[Groups(['user:read:simple','get:detail:livreur','user:read:simple'])]
     private $livraisons;
 
     public function __construct()

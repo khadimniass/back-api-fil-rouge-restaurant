@@ -22,7 +22,10 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 #[ORM\DiscriminatorMap(["client" => "Client","gestionnaire" => "Gestionnaire","livreur"=>"Livreur"])]
 #[ApiResource(
     collectionOperations:[
-        "get",
+        "get"=>[
+            'status' => Response::HTTP_OK,
+            "normalization_context" => ['groups' => ['get:all:user']],
+        ],
         "post",
         "VALIDATION" => [
             "method"=>"PATCH",
@@ -43,40 +46,42 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[Groups(['user:read:simple','get:detail:user','get:view:commande',
-        'get:detail:livreur','get:detail:livraison'])]
+        'get:detail:livreur','get:detail:livraison','get:all:user'])]
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
     protected $id;
 
     #[Groups(['user:read:simple','get:detail:commande','get:detail:user',
-        'get:view:commande','get:detail:livreur','get:detail:livraison'])]
+        'get:view:commande','get:detail:livreur','get:detail:livraison','get:all:user'])]
     #[ORM\Column(type: 'string', length: 100)]
     #[Assert\NotBlank(message: "le nom doit pas etre null")]
     protected $nom;
 
     #[Groups(['user:read:simple','get:detail:commande','get:detail:user',
-        'get:view:commande','get:detail:livreur','get:detail:livraison'])]
+        'get:view:commande','get:detail:livreur','get:detail:livraison','get:all:user'])]
     #[ORM\Column(type: 'string', length: 100)]
     protected $prenom;
     
-    #[Groups(['user:read:simple','get:detail:commande','get:detail:user','get:view:commande','get:detail:livreur'])]
+    #[Groups(['user:read:simple','get:detail:commande','get:detail:user',
+        'get:view:commande','get:detail:livreur','get:all:user'])]
     #[ORM\Column(type: 'string', length: 100, nullable: true)]
     protected $telephone;
 
     #[ORM\Column(type: 'json')]
+    #[Groups(['get:all:user'])]
     protected $roles = [];
 
     #[ORM\Column(type: 'string', length: 180, unique: true)]
   //  #[Assert\Unique(message: 'ce champ doit etre unique')]
-    #[Groups(['get:detail:livreur'])]
+    #[Groups(['user:read:simple','get:detail:livreur','get:all:user'])]
     protected $login;
 
     #[ORM\Column(type: 'string')]
     protected $password;
 
     #[ORM\Column(type: 'string', length: 50)]
-    #[Groups(['user:read:simple','get:detail:livreur'])]
+    #[Groups(['user:read:simple','user:read:simple','get:detail:livreur','get:all:user'])]
     protected $etat;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
@@ -92,7 +97,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     protected $plainPassword;
 
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Commande::class)]
-    #[Groups(['get:detail:user'])]
+    #[Groups(['get:detail:user','get:all:user'])]
     private $commandes;
 
     public function __construct()

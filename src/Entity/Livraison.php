@@ -33,11 +33,11 @@ class Livraison
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    #[Groups(['user:read:simple','get:detail:livreur','get:detail:livraison'])]
-    private $id;
+    #[Groups(['user:read:simple','get:detail:livreur','get:detail:livraison','user:read:simple'])]
+    private ?int $id;
 
     #[ORM\Column(type: 'datetime')]
-    #[Groups(['user:read:simple','get:detail:livreur','get:detail:livraison'])]
+    #[Groups(['user:read:simple','get:detail:livreur','get:detail:livraison','user:read:simple'])]
     private $date;
 
     #[ORM\ManyToOne(targetEntity: Livreur::class, inversedBy: 'livraisons')]
@@ -52,11 +52,11 @@ class Livraison
     private $commandes;
 
     #[ORM\Column(type: 'integer',options:["default"=>1])]
-    #[Groups(['user:read:simple','get:detail:livreur'])]
+    #[Groups(['user:read:simple','get:detail:livreur','user:read:simple'])]
     private $etat;
 
     #[ORM\Column(type: 'integer', nullable: true)]
-    #[Groups(['get:detail:livreur'])]
+    #[Groups(['get:detail:livreur','user:read:simple'])]
     private $prix;
 
     public function __construct()

@@ -55,9 +55,10 @@ class DataPersisterUser implements ContextAwareDataPersisterInterface
             $data->tokenGenerator();
             $data->arrayRoles();
         }
-        if ($data instanceof Livreur)
-           // $data->setGestionnaire($this->token->getUser());
-//        $this->_serviceMailer->sendEmail($data);
+        if ($data instanceof Livreur) {
+             $data->setGestionnaire($this->token->getUser());
+        }
+        $this->_serviceMailer->sendEmail($data);
         $this->_entityManager->persist($data);
         $this->_entityManager->flush();
     }

@@ -41,19 +41,23 @@ class Commande
         'get:view:commande','put:detail:commande',
         'get:detail:commande','get:detail:user',
         'user:read:simple','get:detail:livreur',
-        'get:detail:livraison'
+        'get:detail:livraison','get:all:user'
         ])]
     private $id;
 
     #[ORM\Column(type: 'string', length : 50)]
     #[Groups(['get:view:commande',
         'get:detail:commande','get:detail:user',
-        'user:read:simple','get:detail:livreur','get:detail:livraison'])]
+        'user:read:simple','get:detail:livreur',
+        'get:detail:livraison','get:all:user'
+    ])]
     private $etat;
 
     #[ORM\Column(type: 'datetime')]
     #[Groups(['get:view:commande','get:detail:commande','get:detail:user',
-        'get:detail:livreur','get:detail:livraison'])]
+        'get:detail:livreur','get:detail:livraison','user:read:simple',
+        'get:all:user'
+    ])]
     private $addedAt;
 
     #[ORM\ManyToOne(targetEntity: Livraison::class, inversedBy: 'commandes')]
@@ -70,16 +74,19 @@ class Commande
     #[Groups([
         'view:commandes','get:view:commande',
         'get:detail:commande','get:detail:user',
-        'get:detail:livreur','get:detail:livraison'])]
+        'get:detail:livreur','get:detail:livraison','get:all:user'
+    ])]
     private $zone;
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'commandes')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['get:detail:commande','get:view:commande','get:detail:livreur'])]
+    #[Groups(['get:detail:commande','get:view:commande','get:detail:livreur','user:read:simple'])]
     private $user;
 
     #[ORM\Column(type: 'string', length: 50, nullable: true)]
-    #[Groups(['get:view:commande','get:detail:commande'])]
+    #[Groups(['get:view:commande','get:detail:commande',
+        'get:detail:user','get:detail:livraison',
+        ])]
     private $numeroCommande;
 
     public function __construct()
