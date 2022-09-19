@@ -10,6 +10,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Serializer\Annotation\SerializedName;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Core\Annotation\ApiFilter;
 
 #[ORM\Entity(repositoryClass: CommandeRepository::class)]
 #[ApiResource(
@@ -32,6 +34,8 @@ use Symfony\Component\Serializer\Annotation\SerializedName;
         ]
     ]
 )]
+#[ApiFilter(SearchFilter::class, properties: ['code' => 'exact'])]
+
 class Commande
 {
     #[ORM\Id]
@@ -91,8 +95,7 @@ class Commande
 
     #[ORM\Column(type: 'integer', nullable: true)]
     #[Groups(['get:view:commande','get:detail:commande',
-        'get:detail:user','get:detail:livraison',
-    ])]
+        'get:detail:user','get:detail:livraison',])]
     private $code;
 
     public function __construct()
